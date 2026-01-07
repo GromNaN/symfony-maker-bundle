@@ -12,7 +12,7 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeVoter;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 /**
@@ -22,17 +22,17 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
  *
  * @internal
  */
-final class TemplateLinterTest extends MakerTestCase
+final class TemplateLinterTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         // We can use any maker here - MakeVoter is the simplest for now.
         return MakeVoter::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'lints_templates_with_custom_php_cs_fixer_and_config' => [$this->createMakerTest()
+        yield 'lints_templates_with_custom_php_cs_fixer_and_config' => [self::createMakerTest()
             ->addExtraDependencies('php-cs-fixer/shim')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy('template-linter/php-cs-fixer.test.php', 'php-cs-fixer.test.php');
@@ -58,7 +58,7 @@ final class TemplateLinterTest extends MakerTestCase
             }),
         ];
 
-        yield 'lints_templates_with_flex_generated_config_file' => [$this->createMakerTest()
+        yield 'lints_templates_with_flex_generated_config_file' => [self::createMakerTest()
             ->addExtraDependencies('php-cs-fixer/shim')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->replaceInFile(
@@ -84,7 +84,7 @@ final class TemplateLinterTest extends MakerTestCase
             }),
         ];
 
-        yield 'lints_templates_with_bundled_php_cs_fixer' => [$this->createMakerTest()
+        yield 'lints_templates_with_bundled_php_cs_fixer' => [self::createMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 // Voter class name
                 $output = $runner->runMaker(['FooBar']);

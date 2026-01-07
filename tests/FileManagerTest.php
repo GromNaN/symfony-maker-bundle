@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Bundle\MakerBundle\Util\AutoloaderUtil;
@@ -25,6 +26,7 @@ class FileManagerTest extends TestCase
     /**
      * @dataProvider getRelativizePathTests
      */
+    #[DataProvider('getRelativizePathTests')]
     public function testRelativizePath(string $rootDir, string $absolutePath, string $expectedPath)
     {
         $fileManager = new FileManager(
@@ -37,7 +39,7 @@ class FileManagerTest extends TestCase
         $this->assertSame($expectedPath, $fileManager->relativizePath($absolutePath));
     }
 
-    public function getRelativizePathTests()
+    public static function getRelativizePathTests()
     {
         yield [
             '/home/project',
@@ -79,6 +81,7 @@ class FileManagerTest extends TestCase
     /**
      * @dataProvider getAbsolutePathTests
      */
+    #[DataProvider('getAbsolutePathTests')]
     public function testAbsolutizePath(string $rootDir, string $path, string $expectedPath)
     {
         $fileManager = new FileManager(
@@ -90,7 +93,7 @@ class FileManagerTest extends TestCase
         $this->assertSame($expectedPath, $fileManager->absolutizePath($path));
     }
 
-    public function getAbsolutePathTests()
+    public static function getAbsolutePathTests()
     {
         yield 'normal_path_change' => [
             '/home/project/',
@@ -120,6 +123,7 @@ class FileManagerTest extends TestCase
     /**
      * @dataProvider getIsPathInVendorTests
      */
+    #[DataProvider('getIsPathInVendorTests')]
     public function testIsPathInVendor(string $rootDir, string $path, bool $expectedIsInVendor)
     {
         $fileManager = new FileManager(
@@ -131,7 +135,7 @@ class FileManagerTest extends TestCase
         $this->assertSame($expectedIsInVendor, $fileManager->isPathInVendor($path));
     }
 
-    public function getIsPathInVendorTests()
+    public static function getIsPathInVendorTests()
     {
         yield 'not_in_vendor' => [
             '/home/project/',
@@ -167,6 +171,7 @@ class FileManagerTest extends TestCase
     /**
      * @dataProvider getPathForTemplateTests
      */
+    #[DataProvider('getPathForTemplateTests')]
     public function testPathForTemplate(string $rootDir, string $twigDefaultPath, string $expectedTemplatesFolder)
     {
         $fileManager = new FileManager(
@@ -179,7 +184,7 @@ class FileManagerTest extends TestCase
         $this->assertSame($expectedTemplatesFolder, $fileManager->getPathForTemplate('template.html.twig'));
     }
 
-    public function getPathForTemplateTests()
+    public static function getPathForTemplateTests()
     {
         yield 'its_a_folder' => [
             '/home/project/',

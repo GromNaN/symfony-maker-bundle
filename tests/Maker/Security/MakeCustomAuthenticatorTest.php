@@ -12,31 +12,31 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker\Security;
 
 use Symfony\Bundle\MakerBundle\Maker\Security\MakeCustomAuthenticator;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 /**
  * @author Jesse Rushlow <jr@rushlow.dev>
  */
-class MakeCustomAuthenticatorTest extends MakerTestCase
+class MakeCustomAuthenticatorTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeCustomAuthenticator::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'generates_custom_authenticator' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'generates_custom_authenticator' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'FixtureAuthenticator', // Authenticator Name
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
                 $fixturePath = \dirname(__DIR__, 2).'/fixtures/security/make-custom-authenticator/expected';
 
-                $this->assertFileEquals($fixturePath.'/FixtureAuthenticator.php', $runner->getPath('src/Security/FixtureAuthenticator.php'));
+                self::assertFileEquals($fixturePath.'/FixtureAuthenticator.php', $runner->getPath('src/Security/FixtureAuthenticator.php'));
 
                 $securityConfig = $runner->readYaml('config/packages/security.yaml');
 

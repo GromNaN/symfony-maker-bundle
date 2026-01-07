@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\Util\MakerFileLinkFormatter;
 use Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter;
@@ -18,7 +19,7 @@ use Symfony\Component\HttpKernel\Debug\FileLinkFormatter as LegacyFileLinkFormat
 
 final class MakerFileLinkFormatterTest extends TestCase
 {
-    public function provideMakeLinkedPath(): \Generator
+    public static function provideMakeLinkedPath(): \Generator
     {
         yield 'no_formatter' => [false, false, './my/relative/path'];
         yield 'with_formatter' => [
@@ -32,6 +33,7 @@ final class MakerFileLinkFormatterTest extends TestCase
     /**
      * @dataProvider provideMakeLinkedPath
      */
+    #[DataProvider('provideMakeLinkedPath')]
     public function testMakeLinkedPath(bool $withFileLinkFormatter, bool $linkFormatterReturnsLink, string $expectedOutput)
     {
         if (getenv('MAKER_DISABLE_FILE_LINKS')) {

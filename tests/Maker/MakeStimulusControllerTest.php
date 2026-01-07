@@ -12,20 +12,20 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeStimulusController;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeStimulusControllerTest extends MakerTestCase
+class MakeStimulusControllerTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeStimulusController::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_stimulus_controller' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_stimulus_controller' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         'default', // controller name
@@ -33,12 +33,12 @@ class MakeStimulusControllerTest extends MakerTestCase
                 );
 
                 $generatedFilePath = $runner->getPath('assets/controllers/default_controller.js');
-                $this->assertFileExists($generatedFilePath);
+                self::assertFileExists($generatedFilePath);
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_targets' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_stimulus_controller_with_targets' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         'with_targets', // controller name
@@ -52,20 +52,20 @@ class MakeStimulusControllerTest extends MakerTestCase
 
                 $generatedFilePath = $runner->getPath('assets/controllers/with_targets_controller.js');
 
-                $this->assertFileExists($generatedFilePath);
+                self::assertFileExists($generatedFilePath);
 
                 $generatedFileContents = file_get_contents($generatedFilePath);
                 $expectedContents = file_get_contents(__DIR__.'/../fixtures/make-stimulus-controller/with_targets.js');
 
-                $this->assertSame(
+                self::assertSame(
                     $expectedContents,
                     $generatedFileContents
                 );
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_without_targets' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_stimulus_controller_without_targets' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         'without_targets', // controller name
@@ -75,20 +75,20 @@ class MakeStimulusControllerTest extends MakerTestCase
 
                 $generatedFilePath = $runner->getPath('assets/controllers/without_targets_controller.js');
 
-                $this->assertFileExists($generatedFilePath);
+                self::assertFileExists($generatedFilePath);
 
                 $generatedFileContents = file_get_contents($generatedFilePath);
                 $expectedContents = file_get_contents(__DIR__.'/../fixtures/make-stimulus-controller/without_targets.js');
 
-                $this->assertSame(
+                self::assertSame(
                     $expectedContents,
                     $generatedFileContents
                 );
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_values' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_stimulus_controller_with_values' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         'with_values', // controller name
@@ -104,20 +104,20 @@ class MakeStimulusControllerTest extends MakerTestCase
 
                 $generatedFilePath = $runner->getPath('assets/controllers/with_values_controller.js');
 
-                $this->assertFileExists($generatedFilePath);
+                self::assertFileExists($generatedFilePath);
 
                 $generatedFileContents = file_get_contents($generatedFilePath);
                 $expectedContents = file_get_contents(__DIR__.'/../fixtures/make-stimulus-controller/with_values.js');
 
-                $this->assertSame(
+                self::assertSame(
                     $expectedContents,
                     $generatedFileContents
                 );
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_classes' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_stimulus_controller_with_classes' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         'with_classes', // controller name
@@ -132,20 +132,20 @@ class MakeStimulusControllerTest extends MakerTestCase
 
                 $generatedFilePath = $runner->getPath('assets/controllers/with_classes_controller.js');
 
-                $this->assertFileExists($generatedFilePath);
+                self::assertFileExists($generatedFilePath);
 
                 $generatedFileContents = file_get_contents($generatedFilePath);
                 $expectedContents = file_get_contents(__DIR__.'/../fixtures/make-stimulus-controller/with_classes.js');
 
-                $this->assertSame(
+                self::assertSame(
                     $expectedContents,
                     $generatedFileContents
                 );
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_targets_values_and_classes' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_stimulus_controller_with_targets_values_and_classes' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         'with_targets_values_classes',
@@ -168,20 +168,20 @@ class MakeStimulusControllerTest extends MakerTestCase
 
                 $generatedFilePath = $runner->getPath('assets/controllers/with_targets_values_classes_controller.js');
 
-                $this->assertFileExists($generatedFilePath);
+                self::assertFileExists($generatedFilePath);
 
                 $generatedFileContents = file_get_contents($generatedFilePath);
                 $expectedContents = file_get_contents(__DIR__.'/../fixtures/make-stimulus-controller/with_targets_values_classes.js');
 
-                $this->assertSame(
+                self::assertSame(
                     $expectedContents,
                     $generatedFileContents
                 );
             }),
         ];
 
-        yield 'it_generates_typescript_stimulus_controller_interactively' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_typescript_stimulus_controller_interactively' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         'typescript', // controller name
@@ -190,13 +190,13 @@ class MakeStimulusControllerTest extends MakerTestCase
                     ],
                 );
 
-                $this->assertFileExists($runner->getPath('assets/controllers/typescript_controller.ts'));
-                $this->assertFileDoesNotExist($runner->getPath('assets/controllers/typescript_controller.js'));
+                self::assertFileExists($runner->getPath('assets/controllers/typescript_controller.ts'));
+                self::assertFileDoesNotExist($runner->getPath('assets/controllers/typescript_controller.js'));
             }),
         ];
 
-        yield 'it_generates_typescript_stimulus_controller_when_option_is_set' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_typescript_stimulus_controller_when_option_is_set' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         'typescript', // controller name
@@ -206,13 +206,13 @@ class MakeStimulusControllerTest extends MakerTestCase
                     ' --typescript'
                 );
 
-                $this->assertFileExists($runner->getPath('assets/controllers/typescript_controller.ts'));
-                $this->assertFileDoesNotExist($runner->getPath('assets/controllers/typescript_controller.js'));
+                self::assertFileExists($runner->getPath('assets/controllers/typescript_controller.ts'));
+                self::assertFileDoesNotExist($runner->getPath('assets/controllers/typescript_controller.js'));
             }),
         ];
 
-        yield 'it_displays_controller_basic_usage_example' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_displays_controller_basic_usage_example' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     [
                         'fooBar',
@@ -226,15 +226,15 @@ class MakeStimulusControllerTest extends MakerTestCase
                         </div>
                     HTML;
 
-                $this->assertStringContainsString('- Use the controller in your templates:', $output);
+                self::assertStringContainsString('- Use the controller in your templates:', $output);
                 foreach (explode("\n", $usageExample) as $line) {
-                    $this->assertStringContainsString($line, $output);
+                    self::assertStringContainsString($line, $output);
                 }
             }),
         ];
 
-        yield 'it_displays_controller_complete_usage_example' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_displays_controller_complete_usage_example' => [self::createMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     [
                         'fooBar',
@@ -269,9 +269,9 @@ class MakeStimulusControllerTest extends MakerTestCase
                         </div>
                     HTML;
 
-                $this->assertStringContainsString('- Use the controller in your templates:', $output);
+                self::assertStringContainsString('- Use the controller in your templates:', $output);
                 foreach (explode("\n", $usageExample) as $line) {
-                    $this->assertStringContainsString($line, $output);
+                    self::assertStringContainsString($line, $output);
                 }
             }),
         ];

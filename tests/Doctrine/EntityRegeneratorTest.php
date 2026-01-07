@@ -12,8 +12,8 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Doctrine;
 
 use Composer\InstalledVersions;
-use Composer\Semver\VersionParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -38,6 +38,7 @@ class EntityRegeneratorTest extends TestCase
     /**
      * @dataProvider getRegenerateEntitiesTests
      */
+    #[DataProvider('getRegenerateEntitiesTests')]
     public function testRegenerateEntities(string $expectedDirName, bool $overwrite)
     {
         $kernel = new TestEntityRegeneratorKernel('dev', true);
@@ -51,7 +52,7 @@ class EntityRegeneratorTest extends TestCase
         );
     }
 
-    public function getRegenerateEntitiesTests(): \Generator
+    public static function getRegenerateEntitiesTests(): \Generator
     {
         yield 'regenerate_no_overwrite' => [
             'expected_no_overwrite',
@@ -176,12 +177,13 @@ class TestEntityRegeneratorKernel extends Kernel
             ],
         ];
 
-        if (InstalledVersions::satisfies(new VersionParser(), 'doctrine/doctrine-bundle', '^2.8')) {
-            $orm['enable_lazy_ghost_objects'] = true;
-        }
-
-        if (\PHP_VERSION_ID >= 80400 && InstalledVersions::satisfies(new VersionParser(), 'doctrine/doctrine-bundle', '^2.15')) {
-            $orm['enable_native_lazy_objects'] = true;
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
+            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
+                $orm['enable_lazy_ghost_objects'] = true;
+            }
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+                $orm['enable_native_lazy_objects'] = true;
+            }
         }
 
         $c->prependExtensionConfig('doctrine', [
