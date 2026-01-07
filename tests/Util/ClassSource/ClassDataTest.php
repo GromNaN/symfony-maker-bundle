@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Util\ClassSource;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\MakerBundle;
 use Symfony\Bundle\MakerBundle\Test\MakerTestKernel;
@@ -57,6 +58,7 @@ class ClassDataTest extends TestCase
     }
 
     /** @dataProvider suffixDataProvider */
+    #[DataProvider('suffixDataProvider')]
     public function testSuffix(?string $suffix, string $expectedResult)
     {
         $data = ClassData::create(class: MakerBundle::class, suffix: $suffix);
@@ -64,7 +66,7 @@ class ClassDataTest extends TestCase
         self::assertSame($expectedResult, $data->getClassName());
     }
 
-    public function suffixDataProvider(): \Generator
+    public static function suffixDataProvider(): \Generator
     {
         yield [null, 'MakerBundle'];
         yield ['Testing', 'MakerBundleTesting'];
@@ -72,6 +74,7 @@ class ClassDataTest extends TestCase
     }
 
     /** @dataProvider namespaceDataProvider */
+    #[DataProvider('namespaceDataProvider')]
     public function testNamespace(string $class, ?string $rootNamespace, string $expectedNamespace, string $expectedFullClassName)
     {
         $class = ClassData::create($class);
@@ -84,7 +87,7 @@ class ClassDataTest extends TestCase
         self::assertSame($expectedFullClassName, $class->getFullClassName());
     }
 
-    public function namespaceDataProvider(): \Generator
+    public static function namespaceDataProvider(): \Generator
     {
         yield ['MyController', null, 'App', 'App\MyController'];
         yield ['Controller\MyController', null, 'App\Controller', 'App\Controller\MyController'];
@@ -121,6 +124,7 @@ class ClassDataTest extends TestCase
     }
 
     /** @dataProvider fullClassNameProvider */
+    #[DataProvider('fullClassNameProvider')]
     public function testGetFullClassName(string $class, ?string $rootNamespace, bool $withoutRootNamespace, bool $withoutSuffix, string $expectedFullClassName)
     {
         $class = ClassData::create($class, suffix: 'Controller');
@@ -132,7 +136,7 @@ class ClassDataTest extends TestCase
         self::assertSame($expectedFullClassName, $class->getFullClassName(withoutRootNamespace: $withoutRootNamespace, withoutSuffix: $withoutSuffix));
     }
 
-    public function fullClassNameProvider(): \Generator
+    public static function fullClassNameProvider(): \Generator
     {
         yield ['Controller\MyController', null, false, false, 'App\Controller\MyController'];
         yield ['Controller\MyController', null, true, false, 'Controller\MyController'];

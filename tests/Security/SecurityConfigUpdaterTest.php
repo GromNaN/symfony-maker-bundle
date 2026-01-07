@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\MakerBundle\Security\SecurityConfigUpdater;
@@ -29,6 +30,7 @@ class SecurityConfigUpdaterTest extends TestCase
     /**
      * @dataProvider getUserClassTests
      */
+    #[DataProvider('getUserClassTests')]
     public function testUpdateForUserClass(UserClassConfiguration $userConfig, string $expectedSourceFilename, string $startingSourceFilename = 'simple_security.yaml')
     {
         $this->createLogger();
@@ -48,7 +50,7 @@ class SecurityConfigUpdaterTest extends TestCase
         $this->assertSame($expectedSource, $actualSource);
     }
 
-    public function getUserClassTests(): \Generator
+    public static function getUserClassTests(): \Generator
     {
         yield 'entity_email_password' => [
             new UserClassConfiguration(true, 'email', true),
@@ -104,6 +106,7 @@ class SecurityConfigUpdaterTest extends TestCase
     /**
      * @dataProvider getAuthenticatorTests
      */
+    #[DataProvider('getAuthenticatorTests')]
     public function testUpdateForAuthenticator(string $firewallName, $entryPoint, string $expectedSourceFilename, string $startingSourceFilename, bool $logoutSetup, bool $supportRememberMe, bool $alwaysRememberMe)
     {
         $this->createLogger();
@@ -116,7 +119,7 @@ class SecurityConfigUpdaterTest extends TestCase
         $this->assertSame($expectedSource, $actualSource);
     }
 
-    public function getAuthenticatorTests(): \Generator
+    public static function getAuthenticatorTests(): \Generator
     {
         yield 'empty_source' => [
             'main',

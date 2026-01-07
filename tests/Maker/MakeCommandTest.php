@@ -11,39 +11,40 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\MakerBundle\Maker\MakeCommand;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeCommandTest extends MakerTestCase
+class MakeCommandTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeCommand::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_a_command_no_attributes' => [$this->createMakerTest()
+        yield 'it_makes_a_command_no_attributes' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // command name
                     'app:foo',
                 ]);
 
-                $this->runCommandTest($runner, 'it_makes_a_command.php');
+                self::runCommandTest($runner, 'it_makes_a_command.php');
             }),
         ];
 
-        yield 'it_makes_a_command_with_attributes' => [$this->createMakerTest()
+        yield 'it_makes_a_command_with_attributes' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // command name
                     'app:foo',
                 ]);
 
-                $this->runCommandTest($runner, 'it_makes_a_command.php');
+                self::runCommandTest($runner, 'it_makes_a_command.php');
 
                 $commandFileContents = file_get_contents($runner->getPath('src/Command/FooCommand.php'));
 
@@ -52,7 +53,7 @@ class MakeCommandTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_a_command_in_custom_namespace' => [$this->createMakerTest()
+        yield 'it_makes_a_command_in_custom_namespace' => [self::createMakerTest()
             ->changeRootNamespace('Custom')
             ->run(function (MakerTestRunner $runner) {
                 $runner->writeFile(
@@ -65,12 +66,12 @@ class MakeCommandTest extends MakerTestCase
                     'app:foo',
                 ]);
 
-                $this->runCommandTest($runner, 'it_makes_a_command_in_custom_namespace.php');
+                self::runCommandTest($runner, 'it_makes_a_command_in_custom_namespace.php');
             }),
         ];
     }
 
-    private function runCommandTest(MakerTestRunner $runner, string $filename): void
+    private static function runCommandTest(MakerTestRunner $runner, string $filename): void
     {
         $runner->copy(
             'make-command/tests/'.$filename,

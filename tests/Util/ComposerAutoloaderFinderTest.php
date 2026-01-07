@@ -29,7 +29,7 @@ class ComposerAutoloaderFinderTest extends TestCase
         self::$getSplAutoloadFunctions = 'spl_autoload_functions';
     }
 
-    public function providerNamespaces(): \Generator
+    public static function providerNamespaces(): \Generator
     {
         yield 'Configured PSR-0' => [rtrim(static::$rootNamespace, '\\'), null];
         yield 'Configured PSR-4' => [null, static::$rootNamespace];

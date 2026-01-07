@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\Maker\MakeWebhook;
 use Symfony\Bundle\MakerBundle\Test\MakerTestEnvironment;
@@ -26,6 +27,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestEnvironment;
 class RegexTest extends TestCase
 {
     /** @dataProvider generatedFilesRegexDataProvider */
+    #[DataProvider('generatedFilesRegexDataProvider')]
     public function testMakerTestEnvironmentGeneratedFilesRegex(string $subjectData, array $expectedResult)
     {
         $result = [];
@@ -35,7 +37,7 @@ class RegexTest extends TestCase
         self::assertSame($expectedResult, $result[1]);
     }
 
-    private function generatedFilesRegexDataProvider(): \Generator
+    public static function generatedFilesRegexDataProvider(): \Generator
     {
         yield 'Created Prefix' => ['created: test/something.php', ['test/something.php']];
         yield 'Updated Prefix' => ['updated: test/something.php', ['test/something.php']];
@@ -69,6 +71,7 @@ class RegexTest extends TestCase
     }
 
     /** @dataProvider webhookNameRegexDataProvider */
+    #[DataProvider('webhookNameRegexDataProvider')]
     public function testWebhookNameRegex(string $subjectData, bool $expectedResult)
     {
         $result = preg_match(MakeWebhook::WEBHOOK_NAME_PATTERN, $subjectData);
@@ -76,7 +79,7 @@ class RegexTest extends TestCase
         self::assertSame($expectedResult, (bool) $result);
     }
 
-    private function webhookNameRegexDataProvider(): \Generator
+    public static function webhookNameRegexDataProvider(): \Generator
     {
         // Valid cases
         yield 'Simple word' => ['mywebhook', true];

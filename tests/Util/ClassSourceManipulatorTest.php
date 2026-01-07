@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\FieldMapping;
 use PhpParser\Builder\Param;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\Doctrine\RelationManyToMany;
 use Symfony\Bundle\MakerBundle\Doctrine\RelationManyToOne;
@@ -29,6 +30,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAddPropertyTests
      */
+    #[DataProvider('getAddPropertyTests')]
     public function testAddProperty(string $sourceFilename, $propertyName, array $commentLines, $expectedSourceFilename)
     {
         $source = file_get_contents(__DIR__.'/fixtures/source/'.$sourceFilename);
@@ -40,7 +42,7 @@ class ClassSourceManipulatorTest extends TestCase
         $this->assertSame($expectedSource, $manipulator->getSourceCode());
     }
 
-    public function getAddPropertyTests(): \Generator
+    public static function getAddPropertyTests(): \Generator
     {
         yield 'normal_property_add' => [
             'User_simple.php',
@@ -77,6 +79,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAddGetterTests
      */
+    #[DataProvider('getAddGetterTests')]
     public function testAddGetter(string $sourceFilename, string $propertyName, string $type, array $commentLines, $expectedSourceFilename)
     {
         $source = file_get_contents(__DIR__.'/fixtures/source/'.$sourceFilename);
@@ -88,7 +91,7 @@ class ClassSourceManipulatorTest extends TestCase
         $this->assertSame($expectedSource, $manipulator->getSourceCode());
     }
 
-    public function getAddGetterTests(): \Generator
+    public static function getAddGetterTests(): \Generator
     {
         yield 'normal_getter_add' => [
             'User_simple.php',
@@ -145,6 +148,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAddSetterTests
      */
+    #[DataProvider('getAddSetterTests')]
     public function testAddSetter(string $sourceFilename, string $propertyName, ?string $type, bool $isNullable, array $commentLines, $expectedSourceFilename)
     {
         $source = file_get_contents(__DIR__.'/fixtures/source/'.$sourceFilename);
@@ -156,7 +160,7 @@ class ClassSourceManipulatorTest extends TestCase
         $this->assertSame($expectedSource, $manipulator->getSourceCode());
     }
 
-    public function getAddSetterTests(): \Generator
+    public static function getAddSetterTests(): \Generator
     {
         yield 'normal_setter_add' => [
             'User_simple.php',
@@ -210,6 +214,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAttributeClassTests
      */
+    #[DataProvider('getAttributeClassTests')]
     public function testAddAttributeToClass(string $sourceFilename, string $expectedSourceFilename, string $attributeClass, array $attributeOptions, ?string $attributePrefix = null)
     {
         $source = file_get_contents(__DIR__.'/fixtures/source/'.$sourceFilename);
@@ -220,7 +225,7 @@ class ClassSourceManipulatorTest extends TestCase
         self::assertSame($expectedSource, $manipulator->getSourceCode());
     }
 
-    public function getAttributeClassTests(): \Generator
+    public static function getAttributeClassTests(): \Generator
     {
         yield 'Empty class' => [
             'User_empty.php',
@@ -240,6 +245,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAddEntityFieldTests
      */
+    #[DataProvider('getAddEntityFieldTests')]
     public function testAddEntityField(string $sourceFilename, ClassProperty $propertyModel, $expectedSourceFilename)
     {
         $sourcePath = __DIR__.'/fixtures/source';
@@ -260,7 +266,7 @@ class ClassSourceManipulatorTest extends TestCase
         $this->assertSame($expected, $manipulator->getSourceCode());
     }
 
-    public function getAddEntityFieldTests(): \Generator
+    public static function getAddEntityFieldTests(): \Generator
     {
         /** @legacy - Remove when Doctrine/ORM 2.x is no longer supported. */
         $isLegacy = !class_exists(FieldMapping::class);
@@ -311,6 +317,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAddManyToOneRelationTests
      */
+    #[DataProvider('getAddManyToOneRelationTests')]
     public function testAddManyToOneRelation(string $sourceFilename, $expectedSourceFilename, RelationManyToOne $manyToOne)
     {
         $sourcePath = __DIR__.'/fixtures/source';
@@ -331,7 +338,7 @@ class ClassSourceManipulatorTest extends TestCase
         $this->assertSame($expected, $manipulator->getSourceCode());
     }
 
-    public function getAddManyToOneRelationTests(): \Generator
+    public static function getAddManyToOneRelationTests(): \Generator
     {
         yield 'many_to_one_not_nullable' => [
             'User_simple.php',
@@ -409,6 +416,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAddOneToManyRelationTests
      */
+    #[DataProvider('getAddOneToManyRelationTests')]
     public function testAddOneToManyRelation(string $sourceFilename, string $expectedSourceFilename, RelationOneToMany $oneToMany)
     {
         $sourcePath = __DIR__.'/fixtures/source';
@@ -434,7 +442,7 @@ class ClassSourceManipulatorTest extends TestCase
         $this->assertSame($expected, $manipulator->getSourceCode());
     }
 
-    public function getAddOneToManyRelationTests(): \Generator
+    public static function getAddOneToManyRelationTests(): \Generator
     {
         yield 'one_to_many_simple' => [
             'User_simple.php',
@@ -475,6 +483,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAddManyToManyRelationTests
      */
+    #[DataProvider('getAddManyToManyRelationTests')]
     public function testAddManyToManyRelation(string $sourceFilename, $expectedSourceFilename, RelationManyToMany $manyToMany)
     {
         $sourcePath = __DIR__.'/fixtures/source';
@@ -495,7 +504,7 @@ class ClassSourceManipulatorTest extends TestCase
         $this->assertSame($expected, $manipulator->getSourceCode());
     }
 
-    public function getAddManyToManyRelationTests(): \Generator
+    public static function getAddManyToManyRelationTests(): \Generator
     {
         yield 'many_to_many_owning' => [
             'User_simple.php',
@@ -534,6 +543,7 @@ class ClassSourceManipulatorTest extends TestCase
     /**
      * @dataProvider getAddOneToOneRelationTests
      */
+    #[DataProvider('getAddOneToOneRelationTests')]
     public function testAddOneToOneRelation(string $sourceFilename, $expectedSourceFilename, RelationOneToOne $oneToOne)
     {
         $sourcePath = __DIR__.'/fixtures/source';
@@ -554,7 +564,7 @@ class ClassSourceManipulatorTest extends TestCase
         $this->assertSame($expected, $manipulator->getSourceCode());
     }
 
-    public function getAddOneToOneRelationTests(): \Generator
+    public static function getAddOneToOneRelationTests(): \Generator
     {
         /** @legacy - Remove when Doctrine/ORM 2.x is no longer supported. */
         $isLegacy = !class_exists(FieldMapping::class);

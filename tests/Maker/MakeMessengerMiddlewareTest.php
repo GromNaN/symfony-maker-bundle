@@ -12,19 +12,19 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeMessengerMiddleware;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeMessengerMiddlewareTest extends MakerTestCase
+class MakeMessengerMiddlewareTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeMessengerMiddleware::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_messenger_middleware' => [$this->createMakerTest()
+        yield 'it_generates_messenger_middleware' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -32,7 +32,7 @@ class MakeMessengerMiddlewareTest extends MakerTestCase
                         'CustomMiddleware',
                     ]);
 
-                $this->assertFileExists($runner->getPath('src/Middleware/CustomMiddleware.php'));
+                self::assertFileExists($runner->getPath('src/Middleware/CustomMiddleware.php'));
             }),
         ];
     }

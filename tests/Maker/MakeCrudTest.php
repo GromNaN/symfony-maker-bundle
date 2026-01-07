@@ -12,20 +12,20 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeCrud;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeCrudTest extends MakerTestCase
+class MakeCrudTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeCrud::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_basic_crud' => [$this->createMakerTest()
+        yield 'it_generates_basic_crud' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-crud/SweetFood.php',
@@ -38,14 +38,14 @@ class MakeCrudTest extends MakerTestCase
                     'n',         // Generate Tests
                 ]);
 
-                $this->assertStringContainsString('src/Controller/SweetFoodController.php', $output);
-                $this->assertStringContainsString('src/Form/SweetFoodType.php', $output);
+                self::assertStringContainsString('src/Controller/SweetFoodController.php', $output);
+                self::assertStringContainsString('src/Form/SweetFoodType.php', $output);
 
-                $this->runCrudTest($runner, 'it_generates_basic_crud.php');
+                self::runCrudTest($runner, 'it_generates_basic_crud.php');
             }),
         ];
 
-        yield 'it_generates_crud_with_custom_controller' => [$this->createMakerTest()
+        yield 'it_generates_crud_with_custom_controller' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-crud/SweetFood.php',
@@ -58,14 +58,14 @@ class MakeCrudTest extends MakerTestCase
                     'y',                        // Generate Tests
                 ]);
 
-                $this->assertStringContainsString('src/Controller/SweetFoodAdminController.php', $output);
-                $this->assertStringContainsString('src/Form/SweetFoodType.php', $output);
+                self::assertStringContainsString('src/Controller/SweetFoodAdminController.php', $output);
+                self::assertStringContainsString('src/Form/SweetFoodType.php', $output);
 
-                $this->runCrudTest($runner, 'it_generates_crud_with_custom_controller.php');
+                self::runCrudTest($runner, 'it_generates_crud_with_custom_controller.php');
             }),
         ];
 
-        yield 'it_generates_crud_with_tests' => [$this->createMakerTest()
+        yield 'it_generates_crud_with_tests' => [self::createMakerTest()
             ->addExtraDependencies('symfony/test-pack')
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -79,15 +79,15 @@ class MakeCrudTest extends MakerTestCase
                     'y',         // Generate Tests
                 ]);
 
-                $this->assertStringContainsString('src/Controller/SweetFoodController.php', $output);
-                $this->assertStringContainsString('src/Form/SweetFoodType.php', $output);
-                $this->assertStringContainsString('tests/Controller/SweetFoodControllerTest.php', $output);
+                self::assertStringContainsString('src/Controller/SweetFoodController.php', $output);
+                self::assertStringContainsString('src/Form/SweetFoodType.php', $output);
+                self::assertStringContainsString('tests/Controller/SweetFoodControllerTest.php', $output);
 
-                $this->runCrudTest($runner, 'it_generates_basic_crud.php');
+                self::runCrudTest($runner, 'it_generates_basic_crud.php');
             }),
         ];
 
-        yield 'it_generates_crud_custom_repository_with_test' => [$this->createMakerTest()
+        yield 'it_generates_crud_custom_repository_with_test' => [self::createMakerTest()
             ->addExtraDependencies('symfony/test-pack')
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -106,15 +106,15 @@ class MakeCrudTest extends MakerTestCase
                     'y',         // Generate Tests
                 ]);
 
-                $this->assertStringContainsString('src/Controller/SweetFoodController.php', $output);
-                $this->assertStringContainsString('src/Form/SweetFoodType.php', $output);
-                $this->assertStringContainsString('tests/Controller/SweetFoodControllerTest.php', $output);
+                self::assertStringContainsString('src/Controller/SweetFoodController.php', $output);
+                self::assertStringContainsString('src/Form/SweetFoodType.php', $output);
+                self::assertStringContainsString('tests/Controller/SweetFoodControllerTest.php', $output);
 
-                $this->runCrudTest($runner, 'it_generates_basic_crud.php');
+                self::runCrudTest($runner, 'it_generates_basic_crud.php');
             }),
         ];
 
-        yield 'it_generates_crud_with_custom_root_namespace' => [$this->createMakerTest()
+        yield 'it_generates_crud_with_custom_root_namespace' => [self::createMakerTest()
             ->changeRootNamespace('Custom')
             ->run(function (MakerTestRunner $runner) {
                 $runner->writeFile(
@@ -144,14 +144,14 @@ class MakeCrudTest extends MakerTestCase
                     'n',         // Generate Tests
                 ]);
 
-                $this->assertStringContainsString('src/Controller/SweetFoodController.php', $output);
-                $this->assertStringContainsString('src/Form/SweetFoodType.php', $output);
+                self::assertStringContainsString('src/Controller/SweetFoodController.php', $output);
+                self::assertStringContainsString('src/Form/SweetFoodType.php', $output);
 
-                $this->runCrudTest($runner, 'it_generates_crud_with_custom_root_namespace.php');
+                self::runCrudTest($runner, 'it_generates_crud_with_custom_root_namespace.php');
             }),
         ];
 
-        yield 'it_generates_crud_using_custom_repository' => [$this->createMakerTest()
+        yield 'it_generates_crud_using_custom_repository' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-crud/SweetFoodCustomRepository.php',
@@ -168,10 +168,10 @@ class MakeCrudTest extends MakerTestCase
                     'n',         // Generate Tests
                 ]);
 
-                $this->assertStringContainsString('src/Controller/SweetFoodController.php', $output);
-                $this->assertStringContainsString('src/Form/SweetFoodType.php', $output);
+                self::assertStringContainsString('src/Controller/SweetFoodController.php', $output);
+                self::assertStringContainsString('src/Form/SweetFoodType.php', $output);
 
-                $this->runCrudTest($runner, 'it_generates_basic_crud.php');
+                self::runCrudTest($runner, 'it_generates_basic_crud.php');
                 self::assertFileEquals(
                     \sprintf('%s/fixtures/make-crud/expected/WithCustomRepository.php', \dirname(__DIR__)),
                     $runner->getPath('src/Controller/SweetFoodController.php')
@@ -179,7 +179,7 @@ class MakeCrudTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_crud_with_no_base_template' => [$this->createMakerTest()
+        yield 'it_generates_crud_with_no_base_template' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-crud/SweetFood.php',
@@ -194,15 +194,15 @@ class MakeCrudTest extends MakerTestCase
                     'n',         // Generate Tests
                 ]);
 
-                $this->assertStringContainsString('src/Controller/SweetFoodController.php', $output);
-                $this->assertStringContainsString('src/Form/SweetFoodType.php', $output);
+                self::assertStringContainsString('src/Controller/SweetFoodController.php', $output);
+                self::assertStringContainsString('src/Form/SweetFoodType.php', $output);
 
-                $this->runCrudTest($runner, 'it_generates_basic_crud.php');
+                self::runCrudTest($runner, 'it_generates_basic_crud.php');
             }),
         ];
     }
 
-    private function runCrudTest(MakerTestRunner $runner, string $filename): void
+    private static function runCrudTest(MakerTestRunner $runner, string $filename): void
     {
         $runner->copy(
             'make-crud/tests/'.$filename,

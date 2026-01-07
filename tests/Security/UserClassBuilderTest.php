@@ -44,7 +44,7 @@ class UserClassBuilderTest extends TestCase
         self::assertSame($expectedSource, $manipulator->getSourceCode());
     }
 
-    public function getUserInterfaceTests(): \Generator
+    public static function getUserInterfaceTests(): \Generator
     {
         yield 'entity_with_email_as_identifier' => [
             new UserClassConfiguration(true, 'email', true),

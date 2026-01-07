@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Bundle\MakerBundle\GeneratorTwigHelper;
@@ -20,6 +21,7 @@ class GeneratorTwigHelperTest extends TestCase
     /**
      * @dataProvider getEntityFieldPrintCodeTests
      */
+    #[DataProvider('getEntityFieldPrintCodeTests')]
     public function testGetEntityFieldPrintCode(string $entity, string $fieldName, string $fieldType, string $expect)
     {
         $generator = new GeneratorTwigHelper($this->createMock(FileManager::class));
@@ -32,7 +34,7 @@ class GeneratorTwigHelperTest extends TestCase
         $this->assertSame($expect, $result);
     }
 
-    public function getEntityFieldPrintCodeTests()
+    public static function getEntityFieldPrintCodeTests()
     {
         yield 'normal' => [
             'entity',
