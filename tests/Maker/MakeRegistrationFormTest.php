@@ -12,21 +12,21 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeRegistrationForm;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeRegistrationFormTest extends MakerTestCase
+class MakeRegistrationFormTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeRegistrationForm::class;
     }
 
-    private function createRegistrationFormTest(): MakerTestDetails
+    private static function createRegistrationFormTest(): MakerTestDetails
     {
-        return $this->createMakerTest()
+        return self::createMakerTest()
             ->preRun(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-registration-form/standard_setup',
@@ -36,11 +36,11 @@ class MakeRegistrationFormTest extends MakerTestCase
         ;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_registration_with_entity_and_form_login_with_no_login' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_with_entity_and_form_login_with_no_login' => [self::createRegistrationFormTest()
             ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $runner->runMaker([
                     // user class guessed,
@@ -55,19 +55,19 @@ class MakeRegistrationFormTest extends MakerTestCase
 
                 $fixturePath = \dirname(__DIR__, 1).'/fixtures/make-registration-form/expected';
 
-                $this->assertFileEquals($fixturePath.'/RegistrationControllerNoLogin.php', $runner->getPath('src/Controller/RegistrationController.php'));
+                self::assertFileEquals($fixturePath.'/RegistrationControllerNoLogin.php', $runner->getPath('src/Controller/RegistrationController.php'));
 
-                $this->runRegistrationTest($runner, 'it_generates_registration_with_entity_and_authenticator.php');
+                self::runRegistrationTest($runner, 'it_generates_registration_with_entity_and_authenticator.php');
             }),
         ];
 
-        yield 'it_generates_registration_with_entity_and_form_login_with_security_bundle_login' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_with_entity_and_form_login_with_security_bundle_login' => [self::createRegistrationFormTest()
             ->run(function (MakerTestRunner $runner) {
                 if (60200 > $runner->getSymfonyVersion()) {
-                    $this->markTestSkipped('Requires Symfony 6.2+');
+                    self::markTestSkipped('Requires Symfony 6.2+');
                 }
 
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $runner->modifyYamlFile('config/packages/security.yaml', function (array $data) {
                     $data['security']['firewalls']['main']['form_login']['login_path'] = 'app_login';
@@ -89,15 +89,15 @@ class MakeRegistrationFormTest extends MakerTestCase
 
                 $fixturePath = \dirname(__DIR__, 1).'/fixtures/make-registration-form/expected';
 
-                $this->assertFileEquals($fixturePath.'/RegistrationControllerFormLogin.php', $runner->getPath('src/Controller/RegistrationController.php'));
+                self::assertFileEquals($fixturePath.'/RegistrationControllerFormLogin.php', $runner->getPath('src/Controller/RegistrationController.php'));
 
-                $this->runRegistrationTest($runner, 'it_generates_registration_with_entity_and_authenticator.php');
+                self::runRegistrationTest($runner, 'it_generates_registration_with_entity_and_authenticator.php');
             }),
         ];
 
-        yield 'it_generates_registration_with_entity_and_custom_authenticator' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_with_entity_and_custom_authenticator' => [self::createRegistrationFormTest()
             ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $runner->modifyYamlFile('config/packages/security.yaml', function (array $data) {
                     $data['security']['firewalls']['main']['custom_authenticator'] = 'App\\Security\\StubAuthenticator';
@@ -118,15 +118,15 @@ class MakeRegistrationFormTest extends MakerTestCase
 
                 $fixturePath = \dirname(__DIR__, 1).'/fixtures/make-registration-form/expected';
 
-                $this->assertFileEquals($fixturePath.'/RegistrationControllerCustomAuthenticator.php', $runner->getPath('src/Controller/RegistrationController.php'));
+                self::assertFileEquals($fixturePath.'/RegistrationControllerCustomAuthenticator.php', $runner->getPath('src/Controller/RegistrationController.php'));
 
-                $this->runRegistrationTest($runner, 'it_generates_registration_with_entity_and_authenticator.php');
+                self::runRegistrationTest($runner, 'it_generates_registration_with_entity_and_authenticator.php');
             }),
         ];
 
-        yield 'it_generates_registration_form_with_no_guessing' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_form_with_no_guessing' => [self::createRegistrationFormTest()
             ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner, 'emailAlt');
+                self::makeUser($runner, 'emailAlt');
 
                 $runner->runMaker([
                     'App\\Entity\\User',
@@ -141,9 +141,9 @@ class MakeRegistrationFormTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_registration_form_with_entity_no_login' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_form_with_entity_no_login' => [self::createRegistrationFormTest()
             ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $runner->runMaker([
                     // all basic data guessed
@@ -153,11 +153,11 @@ class MakeRegistrationFormTest extends MakerTestCase
                     'app_anonymous', // route name to redirect to
                 ]);
 
-                $this->runRegistrationTest($runner, 'it_generates_registration_with_entity_and_authenticator.php');
+                self::runRegistrationTest($runner, 'it_generates_registration_with_entity_and_authenticator.php');
             }),
         ];
 
-        yield 'it_generates_registration_form_with_verification' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_form_with_verification' => [self::createRegistrationFormTest()
             ->addExtraDependencies('symfonycasts/verify-email-bundle')
             // needed for internal functional test
             ->addExtraDependencies('symfony/web-profiler-bundle', 'mailer')
@@ -169,7 +169,7 @@ class MakeRegistrationFormTest extends MakerTestCase
                     ]])
                 );
 
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'n', // add UniqueEntity
@@ -181,7 +181,7 @@ class MakeRegistrationFormTest extends MakerTestCase
                     'app_anonymous', // route number to redirect to
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 $generatedFiles = [
                     'src/Security/EmailVerifier.php',
@@ -189,18 +189,18 @@ class MakeRegistrationFormTest extends MakerTestCase
                 ];
 
                 foreach ($generatedFiles as $file) {
-                    $this->assertFileExists($runner->getPath($file));
+                    self::assertFileExists($runner->getPath($file));
                 }
 
                 $userContents = file_get_contents($runner->getPath('src/Entity/User.php'));
 
-                $this->assertStringContainsString('private bool $isVerified = false', $userContents);
+                self::assertStringContainsString('private bool $isVerified = false', $userContents);
 
-                $this->runRegistrationTest($runner, 'it_generates_registration_form_with_verification.php');
+                self::runRegistrationTest($runner, 'it_generates_registration_form_with_verification.php');
             }),
         ];
 
-        yield 'it_generates_registration_form_with_verification_and_translator' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_form_with_verification_and_translator' => [self::createRegistrationFormTest()
             ->addExtraDependencies('symfonycasts/verify-email-bundle')
             // needed for internal functional test
             ->addExtraDependencies('symfony/web-profiler-bundle', 'mailer', 'symfony/translation')
@@ -212,7 +212,7 @@ class MakeRegistrationFormTest extends MakerTestCase
                     ]])
                 );
 
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'n', // add UniqueEntity
@@ -224,15 +224,15 @@ class MakeRegistrationFormTest extends MakerTestCase
                     'app_anonymous', // route number to redirect to
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
-                $this->runRegistrationTest($runner, 'it_generates_registration_form_with_verification.php');
+                self::runRegistrationTest($runner, 'it_generates_registration_form_with_verification.php');
             }),
         ];
 
-        yield 'it_generates_registration_form_with_tests' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_form_with_tests' => [self::createRegistrationFormTest()
             ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'n', // add UniqueEntity
@@ -242,17 +242,17 @@ class MakeRegistrationFormTest extends MakerTestCase
                     'y', // Generate tests
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
-                $this->assertFileExists($runner->getPath('tests/RegistrationControllerTest.php'));
+                self::assertStringContainsString('Success', $output);
+                self::assertFileExists($runner->getPath('tests/RegistrationControllerTest.php'));
 
                 $runner->configureDatabase();
                 $runner->runTests();
             }),
         ];
 
-        yield 'it_generates_registration_form_with_tests_using_flag' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_form_with_tests_using_flag' => [self::createRegistrationFormTest()
             ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'n', // add UniqueEntity
@@ -261,15 +261,15 @@ class MakeRegistrationFormTest extends MakerTestCase
                     'app_anonymous', // route number to redirect to
                 ], '--with-tests');
 
-                $this->assertStringContainsString('Success', $output);
-                $this->assertFileExists($runner->getPath('tests/RegistrationControllerTest.php'));
+                self::assertStringContainsString('Success', $output);
+                self::assertFileExists($runner->getPath('tests/RegistrationControllerTest.php'));
 
                 $runner->configureDatabase();
                 $runner->runTests();
             }),
         ];
 
-        yield 'it_generates_registration_form_with_verification_and_with_tests' => [$this->createRegistrationFormTest()
+        yield 'it_generates_registration_form_with_verification_and_with_tests' => [self::createRegistrationFormTest()
             ->addExtraDependencies('symfonycasts/verify-email-bundle')
             // needed for internal functional test
             ->addExtraDependencies('symfony/web-profiler-bundle', 'mailer')
@@ -281,7 +281,7 @@ class MakeRegistrationFormTest extends MakerTestCase
                     ]])
                 );
 
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'n', // add UniqueEntity
@@ -294,7 +294,7 @@ class MakeRegistrationFormTest extends MakerTestCase
                     'y', // Generate tests
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 $generatedFiles = [
                     'src/Security/EmailVerifier.php',
@@ -303,7 +303,7 @@ class MakeRegistrationFormTest extends MakerTestCase
                 ];
 
                 foreach ($generatedFiles as $file) {
-                    $this->assertFileExists($runner->getPath($file));
+                    self::assertFileExists($runner->getPath($file));
                 }
 
                 $runner->runConsole('cache:clear', [], '--env=test');
@@ -314,7 +314,7 @@ class MakeRegistrationFormTest extends MakerTestCase
         ];
     }
 
-    private function makeUser(MakerTestRunner $runner, string $identifier = 'email'): void
+    private static function makeUser(MakerTestRunner $runner, string $identifier = 'email'): void
     {
         $runner->runConsole('make:user', [
             'User', // class name
@@ -324,7 +324,7 @@ class MakeRegistrationFormTest extends MakerTestCase
         ]);
     }
 
-    private function runRegistrationTest(MakerTestRunner $runner, string $filename): void
+    private static function runRegistrationTest(MakerTestRunner $runner, string $filename): void
     {
         $runner->copy(
             'make-registration-form/tests/'.$filename,

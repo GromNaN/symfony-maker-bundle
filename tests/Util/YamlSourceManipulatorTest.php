@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\MakerBundle\Util\YamlSourceManipulator;
@@ -24,6 +25,8 @@ class YamlSourceManipulatorTest extends TestCase
      * @dataProvider getYamlDataTestsUnixSlashes
      * @dataProvider getYamlDataTestsWindowsSlashes
      */
+    #[DataProvider('getYamlDataTestsUnixSlashes')]
+    #[DataProvider('getYamlDataTestsWindowsSlashes')]
     public function testSetData(string $startingSource, array $newData, string $expectedSource)
     {
         $manipulator = new YamlSourceManipulator($startingSource);
@@ -48,7 +51,7 @@ class YamlSourceManipulatorTest extends TestCase
         $this->assertSame($expectedSource, $actualContents);
     }
 
-    private function getYamlDataTests(): \Generator
+    private static function getYamlDataTests(): \Generator
     {
         $finder = new Finder();
         $finder->in(__DIR__.'/yaml_fixtures')
@@ -66,7 +69,7 @@ class YamlSourceManipulatorTest extends TestCase
             eval($changeCode);
 
             yield $file->getFilename() => [
-                'source' => $source,
+                'startingSource' => $source,
                 'newData' => $data,
                 'expectedSource' => $expected,
             ];
@@ -82,17 +85,17 @@ class YamlSourceManipulatorTest extends TestCase
          */
     }
 
-    public function getYamlDataTestsUnixSlashes(): \Generator
+    public static function getYamlDataTestsUnixSlashes(): \Generator
     {
-        foreach ($this->getYamlDataTests() as $key => $data) {
+        foreach (self::getYamlDataTests() as $key => $data) {
             yield 'unix_'.$key => $data;
         }
     }
 
-    public function getYamlDataTestsWindowsSlashes(): \Generator
+    public static function getYamlDataTestsWindowsSlashes(): \Generator
     {
-        foreach ($this->getYamlDataTests() as $key => $data) {
-            $data['source'] = str_replace("\n", "\r\n", $data['source']);
+        foreach (self::getYamlDataTests() as $key => $data) {
+            $data['startingSource'] = str_replace("\n", "\r\n", $data['startingSource']);
 
             yield 'windows_'.$key => $data;
         }

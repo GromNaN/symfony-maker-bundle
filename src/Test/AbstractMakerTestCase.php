@@ -12,41 +12,42 @@
 namespace Symfony\Bundle\MakerBundle\Test;
 
 use Composer\Semver\Semver;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\MakerInterface;
+use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
 
-/**
- * @deprecated Since symfony/maker-bundle 1.66: Use {@see AbstractMakerTestCase} instead, and declare static methods.
- */
-abstract class MakerTestCase extends TestCase
+abstract class AbstractMakerTestCase extends TestCase
 {
-    private ?KernelInterface $kernel = null;
+    private static ?KernelInterface $kernel = null;
 
     /**
      * @dataProvider getTestDetails
-     *
-     * @return void
      */
-    public function testExecute(MakerTestDetails $makerTestDetails)
+    #[DataProvider('getTestDetails')]
+    public function testExecute(MakerTestDetails $makerTestDetails): void
     {
         $this->executeMakerCommand($makerTestDetails);
     }
 
-    abstract public function getTestDetails();
-
-    abstract protected function getMakerClass(): string;
-
-    protected function createMakerTest(): MakerTestDetails
-    {
-        return new MakerTestDetails($this->getMakerInstance($this->getMakerClass()));
-    }
+    /**
+     * @return iterable<array{0: MakerTestDetails}>
+     */
+    abstract public static function getTestDetails();
 
     /**
-     * @return void
+     * @return class-string<MakerInterface>
      */
-    protected function executeMakerCommand(MakerTestDetails $testDetails)
+    abstract protected static function getMakerClass(): string;
+
+    protected static function createMakerTest(): MakerTestDetails
+    {
+        return new MakerTestDetails(self::getMakerInstance(static::getMakerClass()));
+    }
+
+    protected function executeMakerCommand(MakerTestDetails $testDetails): void
     {
         if (!class_exists(Process::class)) {
             throw new \LogicException('The MakerTestCase cannot be run as the Process component is not installed. Try running "compose require --dev symfony/process".');
@@ -87,25 +88,25 @@ abstract class MakerTestCase extends TestCase
         }
     }
 
-    /**
-     * @return void
-     */
-    protected function assertContainsCount(string $needle, string $haystack, int $count)
+    protected static function assertContainsCount(string $needle, string $haystack, int $count): void
     {
-        $this->assertEquals(1, substr_count($haystack, $needle), \sprintf('Found more than %d occurrences of "%s" in "%s"', $count, $needle, $haystack));
+        self::assertEquals(1, substr_count($haystack, $needle), \sprintf('Found more than %d occurrences of "%s" in "%s"', $count, $needle, $haystack));
     }
 
-    private function getMakerInstance(string $makerClass): MakerInterface
+    private static function getMakerInstance(string $makerClass): MakerInterface
     {
-        if (null === $this->kernel) {
-            $this->kernel = $this->createKernel();
-            $this->kernel->boot();
+        if (null === self::$kernel) {
+            self::$kernel = self::createKernel();
+            self::$kernel->boot();
         }
 
-        return $this->kernel->getContainer()->get('maker_locator_for_tests')->get($makerClass);
+        // a cheap way to guess the service id
+        $serviceId ??= \sprintf('maker.maker.%s', Str::asSnakeCase((new \ReflectionClass($makerClass))->getShortName()));
+
+        return self::$kernel->getContainer()->get($serviceId);
     }
 
-    protected function createKernel(): KernelInterface
+    protected static function createKernel(): KernelInterface
     {
         return new MakerTestKernel('dev', true);
     }

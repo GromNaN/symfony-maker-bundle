@@ -12,22 +12,22 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeMigration;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Bundle\MakerBundle\Util\CliOutputHelper;
 use Symfony\Component\Finder\Finder;
 
-class MakeMigrationTest extends MakerTestCase
+class MakeMigrationTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeMigration::class;
     }
 
-    private function createMakeMigrationTest(): MakerTestDetails
+    private static function createMakeMigrationTest(): MakerTestDetails
     {
-        return $this->createMakerTest()
+        return self::createMakerTest()
             // doctrine-migrations-bundle only requires doctrine-bundle, which
             // only requires doctrine/dbal. But we're testing with the ORM,
             // so let's install it
@@ -43,13 +43,13 @@ class MakeMigrationTest extends MakerTestCase
         ;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_migration_with_changes' => [$this->createMakeMigrationTest()
+        yield 'it_generates_migration_with_changes' => [self::createMakeMigrationTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([/* no input */]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 // support for Migrations 3 (/migrations) and earlier
                 $migrationsDirectoryPath = file_exists($runner->getPath('/migrations')) ? 'migrations' : 'src/Migrations';
@@ -57,50 +57,50 @@ class MakeMigrationTest extends MakerTestCase
                 $finder = new Finder();
                 $finder->in($runner->getPath($migrationsDirectoryPath))
                     ->name('*.php');
-                $this->assertCount(1, $finder);
+                self::assertCount(1, $finder);
 
                 // see that the exact filename is in the output
                 $iterator = $finder->getIterator();
                 $iterator->rewind();
-                $this->assertStringContainsString(\sprintf('%s/%s', $migrationsDirectoryPath, $iterator->current()->getFilename()), $output);
+                self::assertStringContainsString(\sprintf('%s/%s', $migrationsDirectoryPath, $iterator->current()->getFilename()), $output);
             }),
         ];
 
-        yield 'it_detects_symfony_cli_usage' => [$this->createMakeMigrationTest()
+        yield 'it_detects_symfony_cli_usage' => [self::createMakeMigrationTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     inputs: [],
                     envVars: [CliOutputHelper::ENV_VERSION => '0.0.0', CliOutputHelper::ENV_BIN_NAME => 'symfony']
                 );
 
-                $this->assertStringContainsString('symfony console doctrine:migrations:migrate', $output);
+                self::assertStringContainsString('symfony console doctrine:migrations:migrate', $output);
             }),
         ];
 
-        yield 'it_detects_symfony_cli_is_not_used' => [$this->createMakeMigrationTest()
+        yield 'it_detects_symfony_cli_is_not_used' => [self::createMakeMigrationTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     inputs: [],
                     envVars: []
                 );
 
-                $this->assertStringContainsString('php bin/console doctrine:migrations:migrate', $output);
+                self::assertStringContainsString('php bin/console doctrine:migrations:migrate', $output);
             }),
         ];
 
-        yield 'it_generates_migration_with_no_changes' => [$this->createMakeMigrationTest()
+        yield 'it_generates_migration_with_no_changes' => [self::createMakeMigrationTest()
             ->run(function (MakerTestRunner $runner) {
                 // sync so there are no changes
                 $runner->updateSchema();
                 $output = $runner->runMaker([/* no input */]);
 
-                $this->assertStringNotContainsString('Success', $output);
+                self::assertStringNotContainsString('Success', $output);
 
-                $this->assertStringContainsString('No database changes were detected', $output);
+                self::assertStringContainsString('No database changes were detected', $output);
             }),
         ];
 
-        yield 'it_asks_previous_migration_question' => [$this->createMakeMigrationTest()
+        yield 'it_asks_previous_migration_question' => [self::createMakeMigrationTest()
             ->addRequiredPackageVersion('doctrine/doctrine-migrations-bundle', '>=3')
             ->run(function (MakerTestRunner $runner) {
                 // generate a migration first
@@ -111,13 +111,13 @@ class MakeMigrationTest extends MakerTestCase
                     'y',
                 ]);
 
-                $this->assertStringContainsString('[WARNING] You have 1 available migrations to execute', $output);
-                $this->assertStringContainsString('Are you sure you wish to continue?', $output);
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('[WARNING] You have 1 available migrations to execute', $output);
+                self::assertStringContainsString('Are you sure you wish to continue?', $output);
+                self::assertStringContainsString('Success', $output);
             }),
         ];
 
-        yield 'it_asks_previous_migration_question_and_decline' => [$this->createMakeMigrationTest()
+        yield 'it_asks_previous_migration_question_and_decline' => [self::createMakeMigrationTest()
             ->addRequiredPackageVersion('doctrine/doctrine-migrations-bundle', '>=3')
             ->run(function (MakerTestRunner $runner) {
                 // generate a migration first
@@ -128,18 +128,18 @@ class MakeMigrationTest extends MakerTestCase
                     'n',
                 ]);
 
-                $this->assertStringNotContainsString('Success', $output);
+                self::assertStringNotContainsString('Success', $output);
             }),
         ];
 
-        yield 'it_generates_a_formatted_migration' => [$this->createMakeMigrationTest()
+        yield 'it_generates_a_formatted_migration' => [self::createMakeMigrationTest()
             ->addRequiredPackageVersion('doctrine/doctrine-migrations-bundle', '>=3')
             ->run(function (MakerTestRunner $runner) {
                 $runner->runConsole('make:migration', [], '--formatted');
 
                 $output = $runner->runMaker([/* no input */]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
             }),
         ];
 

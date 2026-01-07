@@ -12,22 +12,22 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeSerializerEncoder;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeSerializerEncoderTest extends MakerTestCase
+class MakeSerializerEncoderTest extends AbstractMakerTestCase
 {
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeSerializerEncoder::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_serializer_encoder' => [$this->createMakerTest()
+        yield 'it_makes_serializer_encoder' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 if (70000 >= $runner->getSymfonyVersion()) {
-                    $this->markTestSkipped('Legacy Symfony 6.4 Test');
+                    self::markTestSkipped('Legacy Symfony 6.4 Test');
                 }
                 $runner->runMaker(
                     [
@@ -46,10 +46,10 @@ class MakeSerializerEncoderTest extends MakerTestCase
         ];
 
         /* @legacy - Remove when MakerBundle no longer supports Symfony 6.4 */
-        yield 'it_makes_serializer_encoder_legacy' => [$this->createMakerTest()
+        yield 'it_makes_serializer_encoder_legacy' => [self::createMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 if (70000 < $runner->getSymfonyVersion()) {
-                    $this->markTestSkipped('Legacy Symfony 6.4 Test');
+                    self::markTestSkipped('Legacy Symfony 6.4 Test');
                 }
                 $runner->runMaker(
                     [

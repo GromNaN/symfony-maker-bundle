@@ -37,7 +37,7 @@ class InteractiveSecurityHelperTest extends TestCase
         );
     }
 
-    public function getFirewallNameTests()
+    public static function getFirewallNameTests()
     {
         yield 'empty_security' => [
             [],
@@ -95,7 +95,7 @@ class InteractiveSecurityHelperTest extends TestCase
         );
     }
 
-    public function getUserClassTests()
+    public static function getUserClassTests()
     {
         yield 'user_from_provider' => [
             ['app_provider' => ['entity' => ['class' => 'App\\Entity\\User']]],
@@ -135,7 +135,7 @@ class InteractiveSecurityHelperTest extends TestCase
         );
     }
 
-    public function getUsernameFieldsTest()
+    public static function getUsernameFieldsTest()
     {
         yield 'guess_with_providers' => [
             'providers' => ['app_provider' => ['entity' => ['property' => 'userEmail']]],
@@ -192,7 +192,7 @@ class InteractiveSecurityHelperTest extends TestCase
         );
     }
 
-    public function guessEmailFieldTest()
+    public static function guessEmailFieldTest()
     {
         yield 'guess_fixture_class' => [
             'expectedEmailField' => 'email',
@@ -217,7 +217,7 @@ class InteractiveSecurityHelperTest extends TestCase
         self::assertEquals($expectedResults, $result);
     }
 
-    public function authenticatorClassProvider(): \Generator
+    public static function authenticatorClassProvider(): \Generator
     {
         yield 'Only Custom Authenticator' => [
             [
@@ -294,7 +294,7 @@ class InteractiveSecurityHelperTest extends TestCase
         );
     }
 
-    public function guessPasswordSetterTest()
+    public static function guessPasswordSetterTest()
     {
         yield 'guess_fixture_class' => [
             'expectedPasswordSetter' => 'setPassword',
@@ -329,7 +329,7 @@ class InteractiveSecurityHelperTest extends TestCase
         );
     }
 
-    public function guessEmailGetterTest()
+    public static function guessEmailGetterTest()
     {
         yield 'guess_fixture_class' => [
             'expectedPasswordSetter' => 'getEmail',

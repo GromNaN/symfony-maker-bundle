@@ -12,21 +12,21 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeTwigComponent;
-use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeTwigComponentTest extends MakerTestCase
+class MakeTwigComponentTest extends AbstractMakerTestCase
 {
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_twig_component' => [$this->createMakerTest()
+        yield 'it_generates_twig_component' => [self::createMakerTest()
             ->addExtraDependencies('symfony/ux-twig-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['Alert']);
 
-                $this->assertStringContainsString('src/Twig/Components/Alert.php', $output);
-                $this->assertStringContainsString('templates/components/Alert.html.twig', $output);
-                $this->assertStringContainsString('To render the component, use <twig:Alert />.', $output);
+                self::assertStringContainsString('src/Twig/Components/Alert.php', $output);
+                self::assertStringContainsString('templates/components/Alert.html.twig', $output);
+                self::assertStringContainsString('To render the component, use <twig:Alert />.', $output);
 
                 $runner->copy(
                     'make-twig-component/tests/it_generates_twig_component.php',
@@ -37,7 +37,7 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_twig_component_in_non_default_namespace' => [$this->createMakerTest()
+        yield 'it_generates_twig_component_in_non_default_namespace' => [self::createMakerTest()
             ->addExtraDependencies('symfony/ux-twig-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -47,9 +47,9 @@ class MakeTwigComponentTest extends MakerTestCase
 
                 $output = $runner->runMaker(['Alert']);
 
-                $this->assertStringContainsString('src/Site/Twig/Components/Alert.php', $output);
-                $this->assertStringContainsString('templates/components/Alert.html.twig', $output);
-                $this->assertStringContainsString('To render the component, use <twig:Alert />.', $output);
+                self::assertStringContainsString('src/Site/Twig/Components/Alert.php', $output);
+                self::assertStringContainsString('templates/components/Alert.html.twig', $output);
+                self::assertStringContainsString('To render the component, use <twig:Alert />.', $output);
 
                 $runner->copy(
                     'make-twig-component/tests/it_generates_twig_component.php',
@@ -60,14 +60,14 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_pascal_case_twig_component' => [$this->createMakerTest()
+        yield 'it_generates_pascal_case_twig_component' => [self::createMakerTest()
             ->addExtraDependencies('symfony/ux-twig-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['FormInput']);
 
-                $this->assertStringContainsString('src/Twig/Components/FormInput.php', $output);
-                $this->assertStringContainsString('templates/components/FormInput.html.twig', $output);
-                $this->assertStringContainsString('To render the component, use <twig:FormInput />.', $output);
+                self::assertStringContainsString('src/Twig/Components/FormInput.php', $output);
+                self::assertStringContainsString('templates/components/FormInput.html.twig', $output);
+                self::assertStringContainsString('To render the component, use <twig:FormInput />.', $output);
 
                 $runner->copy(
                     'make-twig-component/tests/it_generates_twig_component.php',
@@ -78,14 +78,14 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_live_component' => [$this->createMakerTest()
+        yield 'it_generates_live_component' => [self::createMakerTest()
             ->addExtraDependencies('symfony/ux-live-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['Alert', 'y']);
 
-                $this->assertStringContainsString('src/Twig/Components/Alert.php', $output);
-                $this->assertStringContainsString('templates/components/Alert.html.twig', $output);
-                $this->assertStringContainsString('To render the component, use <twig:Alert />.', $output);
+                self::assertStringContainsString('src/Twig/Components/Alert.php', $output);
+                self::assertStringContainsString('templates/components/Alert.html.twig', $output);
+                self::assertStringContainsString('To render the component, use <twig:Alert />.', $output);
 
                 $runner->copy(
                     'make-twig-component/tests/it_generates_live_component.php',
@@ -96,14 +96,14 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_pascal_case_live_component' => [$this->createMakerTest()
+        yield 'it_generates_pascal_case_live_component' => [self::createMakerTest()
             ->addExtraDependencies('symfony/ux-live-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['FormInput', 'y']);
 
-                $this->assertStringContainsString('src/Twig/Components/FormInput.php', $output);
-                $this->assertStringContainsString('templates/components/FormInput.html.twig', $output);
-                $this->assertStringContainsString('To render the component, use <twig:FormInput />.', $output);
+                self::assertStringContainsString('src/Twig/Components/FormInput.php', $output);
+                self::assertStringContainsString('templates/components/FormInput.html.twig', $output);
+                self::assertStringContainsString('To render the component, use <twig:FormInput />.', $output);
 
                 $runner->copy(
                     'make-twig-component/tests/it_generates_live_component.php',
@@ -114,14 +114,14 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_live_component_on_subdirectory' => [$this->createMakerTest()
+        yield 'it_generates_live_component_on_subdirectory' => [self::createMakerTest()
             ->addExtraDependencies('symfony/ux-live-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['Form\Input', 'y']);
 
-                $this->assertStringContainsString('src/Twig/Components/Form/Input.php', $output);
-                $this->assertStringContainsString('templates/components/Form/Input.html.twig', $output);
-                $this->assertStringContainsString('To render the component, use <twig:Form:Input />.', $output);
+                self::assertStringContainsString('src/Twig/Components/Form/Input.php', $output);
+                self::assertStringContainsString('templates/components/Form/Input.html.twig', $output);
+                self::assertStringContainsString('To render the component, use <twig:Form:Input />.', $output);
 
                 $runner->copy(
                     'make-twig-component/tests/it_generates_live_component.php',
@@ -133,7 +133,7 @@ class MakeTwigComponentTest extends MakerTestCase
         ];
     }
 
-    protected function getMakerClass(): string
+    protected static function getMakerClass(): string
     {
         return MakeTwigComponent::class;
     }

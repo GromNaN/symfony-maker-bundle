@@ -11,42 +11,48 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\Str;
 
 class StrTest extends TestCase
 {
     /** @dataProvider provideHasSuffix */
+    #[DataProvider('provideHasSuffix')]
     public function testHasSuffix($value, $suffix, $expectedResult)
     {
         $this->assertSame($expectedResult, Str::hasSuffix($value, $suffix));
     }
 
     /** @dataProvider provideAddSuffix */
+    #[DataProvider('provideAddSuffix')]
     public function testAddSuffix($value, $suffix, $expectedResult)
     {
         $this->assertSame($expectedResult, Str::addSuffix($value, $suffix));
     }
 
     /** @dataProvider provideRemoveSuffix */
+    #[DataProvider('provideRemoveSuffix')]
     public function testRemoveSuffix($value, $suffix, $expectedResult)
     {
         $this->assertSame($expectedResult, Str::removeSuffix($value, $suffix));
     }
 
     /** @dataProvider provideAsClassName */
+    #[DataProvider('provideAsClassName')]
     public function testAsClassName($value, $suffix, $expectedResult)
     {
         $this->assertSame($expectedResult, Str::asClassName($value, $suffix));
     }
 
     /** @dataProvider provideAsTwigVariable */
+    #[DataProvider('provideAsTwigVariable')]
     public function testAsTwigVariable($value, $expectedResult)
     {
         $this->assertSame($expectedResult, Str::asTwigVariable($value));
     }
 
-    public function provideHasSuffix()
+    public static function provideHasSuffix()
     {
         yield ['', '', true];
         yield ['GenerateCommand', '', false];
@@ -58,7 +64,7 @@ class StrTest extends TestCase
         yield ['Generate', 'Command', false];
     }
 
-    public function provideAddSuffix()
+    public static function provideAddSuffix()
     {
         yield ['', '', ''];
         yield ['GenerateCommand', '', 'GenerateCommand'];
@@ -72,7 +78,7 @@ class StrTest extends TestCase
         yield ['Generate', 'Command', 'GenerateCommand'];
     }
 
-    public function provideRemoveSuffix()
+    public static function provideRemoveSuffix()
     {
         yield ['', '', ''];
         yield ['GenerateCommand', '', 'GenerateCommand'];
@@ -85,7 +91,7 @@ class StrTest extends TestCase
         yield ['Generate', 'Command', 'Generate'];
     }
 
-    public function provideAsClassName()
+    public static function provideAsClassName()
     {
         yield ['', '', ''];
         yield ['GenerateCommand', '', 'GenerateCommand'];
@@ -98,7 +104,7 @@ class StrTest extends TestCase
         yield ['app:generate:command', 'Command', 'AppGenerateCommand'];
     }
 
-    public function provideAsTwigVariable()
+    public static function provideAsTwigVariable()
     {
         yield ['', '', ''];
         yield ['GenerateCommand', 'generate_command'];
@@ -112,12 +118,13 @@ class StrTest extends TestCase
     /**
      * @dataProvider getCamelCaseToPluralCamelCaseTests
      */
+    #[DataProvider('getCamelCaseToPluralCamelCaseTests')]
     public function testCamelCaseToPluralCamelCase(string $original, string $expected)
     {
         $this->assertSame(Str::singularCamelCaseToPluralCamelCase($original), $expected);
     }
 
-    public function getCamelCaseToPluralCamelCaseTests()
+    public static function getCamelCaseToPluralCamelCaseTests()
     {
         yield ['bar', 'bars'];
         yield ['fooBar', 'fooBars'];
@@ -128,12 +135,13 @@ class StrTest extends TestCase
     /**
      * @dataProvider getPluralCamelCaseToSingularTests
      */
+    #[DataProvider('getPluralCamelCaseToSingularTests')]
     public function testPluralCamelCaseToSingular(string $original, string $expected)
     {
         $this->assertSame(Str::pluralCamelCaseToSingular($original), $expected);
     }
 
-    public function getPluralCamelCaseToSingularTests()
+    public static function getPluralCamelCaseToSingularTests()
     {
         yield ['bar', 'bar'];
         yield ['bars', 'bar'];
@@ -145,12 +153,13 @@ class StrTest extends TestCase
     /**
      * @dataProvider getNamespaceTests
      */
+    #[DataProvider('getNamespaceTests')]
     public function testGetNamespace(string $fullClassName, string $expectedNamespace)
     {
         $this->assertSame($expectedNamespace, Str::getNamespace($fullClassName));
     }
 
-    public function getNamespaceTests()
+    public static function getNamespaceTests()
     {
         yield ['App\\Entity\\Foo', 'App\\Entity'];
         yield ['DateTime', ''];
@@ -159,12 +168,13 @@ class StrTest extends TestCase
     /**
      * @dataProvider getAsCamelCaseTests
      */
+    #[DataProvider('getAsCamelCaseTests')]
     public function testAsCamelCase(string $original, string $expected)
     {
         $this->assertSame($expected, Str::asCamelCase($original));
     }
 
-    public function getAsCamelCaseTests()
+    public static function getAsCamelCaseTests()
     {
         yield ['foo', 'Foo'];
 
@@ -174,12 +184,13 @@ class StrTest extends TestCase
     /**
      * @dataProvider getShortClassNameCaseTests
      */
+    #[DataProvider('getShortClassNameCaseTests')]
     public function testShortClassName(string $original, string $expected)
     {
         $this->assertSame($expected, Str::getShortClassName($original));
     }
 
-    public function getShortClassNameCaseTests()
+    public static function getShortClassNameCaseTests()
     {
         yield ['App\\Entity\\Foo', 'Foo'];
         yield ['Foo', 'Foo'];
@@ -188,12 +199,13 @@ class StrTest extends TestCase
     /**
      * @dataProvider getHumanDiscriminatorBetweenTwoClassesTests
      */
+    #[DataProvider('getHumanDiscriminatorBetweenTwoClassesTests')]
     public function testHumanDiscriminatorBetweenTwoClasses(string $className, string $classNameOther, array $expected)
     {
         $this->assertSame($expected, Str::getHumanDiscriminatorBetweenTwoClasses($className, $classNameOther));
     }
 
-    public function getHumanDiscriminatorBetweenTwoClassesTests()
+    public static function getHumanDiscriminatorBetweenTwoClassesTests()
     {
         yield ['\\User', 'App\\Entity\\User', ['', 'App\\Entity']];
         yield ['App\\Entity\\User', 'App\\Entity\\Friend\\User', ['', 'Friend']];
@@ -206,12 +218,13 @@ class StrTest extends TestCase
     /**
      * @dataProvider asHumanWordsTests
      */
+    #[DataProvider('asHumanWordsTests')]
     public function testAsHumanWords(string $original, string $expected)
     {
         $this->assertSame($expected, Str::asHumanWords($original));
     }
 
-    public function asHumanWordsTests()
+    public static function asHumanWordsTests()
     {
         yield ['fooBar', 'Foo Bar'];
         yield ['FooBar', 'Foo Bar'];
@@ -222,12 +235,13 @@ class StrTest extends TestCase
     /**
      * @dataProvider provideAsRouteName
      */
+    #[DataProvider('provideAsRouteName')]
     public function testAsRouteName(string $value, string $expectedRouteName)
     {
         $this->assertSame($expectedRouteName, Str::asRouteName($value));
     }
 
-    public function provideAsRouteName()
+    public static function provideAsRouteName()
     {
         yield ['Example', 'app_example'];
         yield ['AppExample', 'app_example'];
