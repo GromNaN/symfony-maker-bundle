@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Test;
 
+use Composer\InstalledVersions;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\InputStream;
 
@@ -28,7 +29,8 @@ final class MakerTestEnvironment
     public const GENERATED_FILES_REGEX = '#(?:created|updated):\s(?:.*\\\\)*(.*\.[a-z]{3,4}).*(?:\\\\n)?#ui';
 
     private Filesystem $fs;
-    private bool|string $rootPath;
+    private string $packageName;
+    private string $rootPath;
     private string $cachePath;
     private string $flexPath;
     private string $path;
@@ -41,7 +43,9 @@ final class MakerTestEnvironment
         $this->isWindows = str_contains(strtolower(\PHP_OS), 'win');
 
         $this->fs = new Filesystem();
-        $this->rootPath = realpath(__DIR__.'/../../');
+        $composerPackage = InstalledVersions::getRootPackage();
+        $this->packageName = $composerPackage['name'];
+        $this->rootPath = realpath($composerPackage['install_path']);
         $cachePath = $this->rootPath.'/tests/tmp/cache';
 
         if (!$this->fs->exists($cachePath)) {
@@ -230,7 +234,7 @@ final class MakerTestEnvironment
 
     public function runTwigCSLint(string $file): MakerTestProcess
     {
-        if (!file_exists(__DIR__.'/../../tools/twigcs/vendor/bin/twigcs')) {
+        if (!file_exists($this->rootPath.'/tools/twigcs/vendor/bin/twigcs')) {
             throw new \Exception('twigcs not found: run: "composer upgrade -W --working-dir=tools/twigcs".');
         }
 
@@ -250,7 +254,7 @@ final class MakerTestEnvironment
             $this->cachePath
         )->run();
 
-        $rootPath = str_replace('\\', '\\\\', realpath(__DIR__.'/../..'));
+        $rootPath = str_replace('\\', '\\\\', $this->rootPath);
 
         $this->addMakerBundleRepoToComposer(\sprintf('%s/%s/composer.json', $this->cachePath, $flexProjectDir));
 
@@ -411,7 +415,7 @@ echo json_encode($missingDependencies);
 
     private function composerRequireMakerBundle(string $projectDirectory): void
     {
-        MakerTestProcess::create('composer require --dev symfony/maker-bundle', $projectDirectory)
+        MakerTestProcess::create('composer require --dev '.$this->packageName, $projectDirectory)
             ->run()
         ;
 
@@ -435,12 +439,12 @@ echo json_encode($missingDependencies);
         // Require-dev is empty and composer complains about this being an array when we encode it again.
         unset($composerJson['require-dev']);
 
-        $composerJson['repositories']['symfony/maker-bundle'] = [
+        $composerJson['repositories'][$this->packageName] = [
             'type' => 'path',
             'url' => \sprintf('%s%smaker-repo', $this->cachePath, \DIRECTORY_SEPARATOR),
             'options' => [
                 'versions' => [
-                    'symfony/maker-bundle' => '9999.99', // Arbitrary version to avoid stability conflicts
+                    $this->packageName => '9999.99', // Arbitrary version to avoid stability conflicts
                 ],
             ],
         ];
