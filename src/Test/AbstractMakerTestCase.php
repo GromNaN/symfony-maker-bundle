@@ -96,7 +96,7 @@ abstract class AbstractMakerTestCase extends TestCase
     private static function getMakerInstance(string $makerClass): MakerInterface
     {
         if (null === self::$kernel) {
-            self::$kernel = self::createKernel();
+            self::$kernel = static::createKernel();
             self::$kernel->boot();
         }
 
