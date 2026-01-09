@@ -27,7 +27,7 @@ class MakeMigrationTest extends MakerTestCase
 
     private static function createMakeMigrationTest(): MakerTestDetails
     {
-        return self::newMakerTest()
+        return self::buildMakerTest()
             // doctrine-migrations-bundle only requires doctrine-bundle, which
             // only requires doctrine/dbal. But we're testing with the ORM,
             // so let's install it

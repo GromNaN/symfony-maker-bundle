@@ -48,7 +48,7 @@ abstract class MakerTestCase extends TestCase
         return new MakerTestDetails($this->getMakerInstance($this->getMakerClass()));
     }
 
-    protected static function newMakerTest(): MakerTestDetails
+    protected static function buildMakerTest(): MakerTestDetails
     {
         return new MakerTestDetails();
     }

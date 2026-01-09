@@ -25,7 +25,7 @@ class MakeUserTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_entity_with_password' => [self::newMakerTest()
+        yield 'it_generates_entity_with_password' => [self::buildMakerTest()
             ->addExtraDependencies('doctrine')
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -45,7 +45,7 @@ class MakeUserTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_entity_with_password_and_uuid' => [self::newMakerTest()
+        yield 'it_generates_entity_with_password_and_uuid' => [self::buildMakerTest()
             ->addExtraDependencies('doctrine')
             ->addExtraDependencies('symfony/uid')
             ->run(function (MakerTestRunner $runner) {
@@ -66,7 +66,7 @@ class MakeUserTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_entity_with_password_and_ulid' => [self::newMakerTest()
+        yield 'it_generates_entity_with_password_and_ulid' => [self::buildMakerTest()
             ->addExtraDependencies('doctrine')
             ->addExtraDependencies('symfony/uid')
             ->run(function (MakerTestRunner $runner) {
@@ -87,7 +87,7 @@ class MakeUserTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_non_entity_no_password' => [self::newMakerTest()
+        yield 'it_generates_non_entity_no_password' => [self::buildMakerTest()
             ->addExtraDependencies('doctrine')
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(

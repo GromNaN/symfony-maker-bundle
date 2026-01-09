@@ -27,7 +27,7 @@ class MakeMessageTest extends MakerTestCase
 
     private static function createMakeMessageTest(): MakerTestDetails
     {
-        return self::newMakerTest()
+        return self::buildMakerTest()
             ->preRun(function (MakerTestRunner $runner) {
                 $runner->writeFile(
                     'config/services_test.yaml',

@@ -25,7 +25,7 @@ class MakeTestTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_TestCase_type' => [self::newMakerTest()
+        yield 'it_makes_TestCase_type' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -40,7 +40,7 @@ class MakeTestTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_KernelTestCase_type' => [self::newMakerTest()
+        yield 'it_makes_KernelTestCase_type' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-test/basic_setup',
@@ -60,7 +60,7 @@ class MakeTestTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_WebTestCase_type' => [self::newMakerTest()
+        yield 'it_makes_WebTestCase_type' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-test/basic_setup',
@@ -107,7 +107,7 @@ class MakeTestTest extends MakerTestCase
 
     protected static function getPantherTest(): MakerTestDetails
     {
-        return self::newMakerTest()
+        return self::buildMakerTest()
             ->skipTest(
                 message: 'Panther test skipped - MAKER_SKIP_PANTHER_TEST set to TRUE.',
                 skipped: getenv('MAKER_SKIP_PANTHER_TEST')

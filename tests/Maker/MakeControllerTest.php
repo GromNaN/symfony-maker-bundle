@@ -29,7 +29,7 @@ class MakeControllerTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_a_controller' => [self::newMakerTest()
+        yield 'it_generates_a_controller' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     // controller class name
@@ -47,7 +47,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller-with-tests' => [self::newMakerTest()
+        yield 'it_generates_a_controller-with-tests' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/test-pack')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
@@ -65,7 +65,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller__no_input' => [self::newMakerTest()
+        yield 'it_generates_a_controller__no_input' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([], 'FooBar');
 
@@ -77,7 +77,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_with_twig' => [self::newMakerTest()
+        yield 'it_generates_a_controller_with_twig' => [self::buildMakerTest()
             ->addExtraDependencies('twig')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
@@ -98,7 +98,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_with_twig__no_input' => [self::newMakerTest()
+        yield 'it_generates_a_controller_with_twig__no_input' => [self::buildMakerTest()
             ->addExtraDependencies('twig')
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker([], 'FooTwig');
@@ -110,7 +110,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_with_twig_no_base_template' => [self::newMakerTest()
+        yield 'it_generates_a_controller_with_twig_no_base_template' => [self::buildMakerTest()
             ->addExtraDependencies('twig')
             ->run(function (MakerTestRunner $runner) {
                 $runner->deleteFile('templates/base.html.twig');
@@ -127,7 +127,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_with_without_template' => [self::newMakerTest()
+        yield 'it_generates_a_controller_with_without_template' => [self::buildMakerTest()
             ->addExtraDependencies('twig')
             ->run(function (MakerTestRunner $runner) {
                 $runner->deleteFile('templates/base.html.twig');
@@ -144,7 +144,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_in_sub_namespace' => [self::newMakerTest()
+        yield 'it_generates_a_controller_in_sub_namespace' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     // controller class name
@@ -156,7 +156,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_in_sub_namespace__no_input' => [self::newMakerTest()
+        yield 'it_generates_a_controller_in_sub_namespace__no_input' => [self::buildMakerTest()
             ->skipTest(
                 message: 'Test Skipped - MAKER_TEST_WINDOWS is true.',
                 skipped: getenv('MAKER_TEST_WINDOWS')
@@ -169,7 +169,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_in_sub_namespace_with_template' => [self::newMakerTest()
+        yield 'it_generates_a_controller_in_sub_namespace_with_template' => [self::buildMakerTest()
             ->addExtraDependencies('twig')
            ->run(function (MakerTestRunner $runner) {
                $output = $runner->runMaker([
@@ -184,7 +184,7 @@ class MakeControllerTest extends MakerTestCase
            }),
         ];
 
-        yield 'it_generates_a_controller_with_full_custom_namespace' => [self::newMakerTest()
+        yield 'it_generates_a_controller_with_full_custom_namespace' => [self::buildMakerTest()
              ->addExtraDependencies('twig')
              ->run(function (MakerTestRunner $runner) {
                  $output = $runner->runMaker([
@@ -200,7 +200,7 @@ class MakeControllerTest extends MakerTestCase
              }),
         ];
 
-        yield 'it_generates_a_controller_with_full_custom_namespace__no_input' => [self::newMakerTest()
+        yield 'it_generates_a_controller_with_full_custom_namespace__no_input' => [self::buildMakerTest()
             ->skipTest(
                 message: 'Test Skipped - MAKER_TEST_WINDOWS is true.',
                 skipped: getenv('MAKER_TEST_WINDOWS')
@@ -216,7 +216,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_with_invoke' => [self::newMakerTest()
+        yield 'it_generates_a_controller_with_invoke' => [self::buildMakerTest()
             ->addExtraDependencies('twig')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
@@ -233,7 +233,7 @@ class MakeControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_controller_with_invoke_in_sub_namespace' => [self::newMakerTest()
+        yield 'it_generates_a_controller_with_invoke_in_sub_namespace' => [self::buildMakerTest()
             ->addExtraDependencies('twig')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([

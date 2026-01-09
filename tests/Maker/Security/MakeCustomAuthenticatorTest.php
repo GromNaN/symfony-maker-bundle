@@ -27,7 +27,7 @@ class MakeCustomAuthenticatorTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'generates_custom_authenticator' => [self::newMakerTest()
+        yield 'generates_custom_authenticator' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'FixtureAuthenticator', // Authenticator Name
