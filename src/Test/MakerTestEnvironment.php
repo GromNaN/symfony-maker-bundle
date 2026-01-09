@@ -247,7 +247,7 @@ final class MakerTestEnvironment
         $targetVersion = $this->getTargetSkeletonVersion();
         $versionString = $targetVersion ? \sprintf(':%s', $targetVersion) : '';
 
-        $flexProjectDir = \sprintf('flex_project%s', $targetVersion);
+        $flexProjectDir = \sprintf('%s/flex_project%s', $this->cachePath, $targetVersion);
 
         MakerTestProcess::create(
             \sprintf('composer create-project symfony/skeleton%s %s --prefer-dist --no-progress --keep-vcs', $versionString, $flexProjectDir),
@@ -256,11 +256,11 @@ final class MakerTestEnvironment
 
         $rootPath = str_replace('\\', '\\\\', $this->rootPath);
 
-        $this->addMakerBundleRepoToComposer(\sprintf('%s/%s/composer.json', $this->cachePath, $flexProjectDir));
+        $this->addMakerBundleRepoToComposer($flexProjectDir);
 
         // In Linux, git plays well with symlinks - we can add maker to the flex skeleton.
         if (!$this->isWindows) {
-            $this->composerRequireMakerBundle(\sprintf('%s/%s', $this->cachePath, $flexProjectDir));
+            $this->composerRequireMakerBundle($flexProjectDir);
         }
 
         // fetch a few packages needed for testing
@@ -416,8 +416,7 @@ echo json_encode($missingDependencies);
     private function composerRequireMakerBundle(string $projectDirectory): void
     {
         MakerTestProcess::create('composer require --dev '.$this->packageName, $projectDirectory)
-            ->run()
-        ;
+            ->run();
 
         $makerRepoSrcPath = \sprintf('%s/maker-repo/src', $this->cachePath);
 
@@ -429,17 +428,11 @@ echo json_encode($missingDependencies);
     }
 
     /**
-     * Adds Symfony/MakerBundle as a "path" repository to composer.json.
+     * Adds symfony/maker-bundle as a "path" repository to composer.json.
      */
-    private function addMakerBundleRepoToComposer(string $composerJsonPath): void
+    private function addMakerBundleRepoToComposer(string $projectDirectory): void
     {
-        $composerJson = json_decode(
-            file_get_contents($composerJsonPath), true, 512, \JSON_THROW_ON_ERROR);
-
-        // Require-dev is empty and composer complains about this being an array when we encode it again.
-        unset($composerJson['require-dev']);
-
-        $composerJson['repositories'][$this->packageName] = [
+        $repo = [
             'type' => 'path',
             'url' => \sprintf('%s%smaker-repo', $this->cachePath, \DIRECTORY_SEPARATOR),
             'options' => [
@@ -449,6 +442,10 @@ echo json_encode($missingDependencies);
             ],
         ];
 
-        file_put_contents($composerJsonPath, json_encode($composerJson, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
+        MakerTestProcess::create(\sprintf(
+            'composer repo add %s \'%s\' ',
+            $this->packageName,
+            json_encode($repo, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES),
+        ), $projectDirectory)->run();
     }
 }
