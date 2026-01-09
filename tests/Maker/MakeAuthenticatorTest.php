@@ -13,7 +13,7 @@ namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\MakerBundle\Maker\MakeAuthenticator;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  * @group legacy
  */
 #[Group('legacy')]
-class MakeAuthenticatorTest extends AbstractMakerTestCase
+class MakeAuthenticatorTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -30,7 +30,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'auth_empty_one_firewall' => [self::createMakerTest()
+        yield 'auth_empty_one_firewall' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     // authenticator type => empty-auth
@@ -49,7 +49,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_empty_multiple_firewalls' => [self::createMakerTest()
+        yield 'auth_empty_multiple_firewalls' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->modifyYamlFile('config/packages/security.yaml', static function (array $config) {
                     $config['security']['firewalls']['second']['lazy'] = true;
@@ -75,7 +75,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_empty_existing_authenticator' => [self::createMakerTest()
+        yield 'auth_empty_existing_authenticator' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-auth/BlankAuthenticator.php',
@@ -107,7 +107,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_empty_multiple_firewalls_existing_authenticator' => [self::createMakerTest()
+        yield 'auth_empty_multiple_firewalls_existing_authenticator' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-auth/BlankAuthenticator.php',
@@ -141,7 +141,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_login_form_user_entity_with_hasher' => [self::createMakerTest()
+        yield 'auth_login_form_user_entity_with_hasher' => [self::newMakerTest()
             ->addExtraDependencies('doctrine', 'twig', 'symfony/form')
             ->run(static function (MakerTestRunner $runner) {
                 self::makeUser($runner, 'userEmail');
@@ -170,7 +170,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_login_form_no_entity_custom_username_field' => [self::createMakerTest()
+        yield 'auth_login_form_no_entity_custom_username_field' => [self::newMakerTest()
             ->addExtraDependencies('twig', 'symfony/form')
             ->run(static function (MakerTestRunner $runner) {
                 self::makeUser($runner, 'userEmail', false);
@@ -201,7 +201,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_login_form_user_not_entity_with_hasher' => [self::createMakerTest()
+        yield 'auth_login_form_user_not_entity_with_hasher' => [self::newMakerTest()
             ->addExtraDependencies('twig', 'symfony/form')
             ->run(static function (MakerTestRunner $runner) {
                 self::makeUser($runner, 'email', false);
@@ -222,7 +222,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_login_form_existing_controller' => [self::createMakerTest()
+        yield 'auth_login_form_existing_controller' => [self::newMakerTest()
             ->addExtraDependencies('doctrine', 'twig', 'symfony/form')
             ->run(static function (MakerTestRunner $runner) {
                 self::makeUser($runner, 'email');
@@ -248,7 +248,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_login_form_user_entity_with_logout' => [self::createMakerTest()
+        yield 'auth_login_form_user_entity_with_logout' => [self::newMakerTest()
             ->addExtraDependencies('doctrine', 'twig', 'symfony/form')
             ->run(static function (MakerTestRunner $runner) {
                 self::makeUser($runner, 'userEmail');
@@ -282,7 +282,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_login_form_remember_me_via_checkbox' => [self::createMakerTest()
+        yield 'auth_login_form_remember_me_via_checkbox' => [self::newMakerTest()
             ->addExtraDependencies('doctrine', 'twig', 'symfony/form')
             ->run(static function (MakerTestRunner $runner) {
                 self::makeUser($runner, 'userEmail');
@@ -314,7 +314,7 @@ class MakeAuthenticatorTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'auth_login_form_always_remember_me' => [self::createMakerTest()
+        yield 'auth_login_form_always_remember_me' => [self::newMakerTest()
             ->addExtraDependencies('doctrine', 'twig', 'symfony/form')
             ->run(static function (MakerTestRunner $runner) {
                 self::makeUser($runner, 'userEmail');

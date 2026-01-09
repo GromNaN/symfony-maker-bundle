@@ -12,10 +12,10 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeStimulusController;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeStimulusControllerTest extends AbstractMakerTestCase
+class MakeStimulusControllerTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -24,7 +24,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_stimulus_controller' => [self::createMakerTest()
+        yield 'it_generates_stimulus_controller' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -37,7 +37,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_targets' => [self::createMakerTest()
+        yield 'it_generates_stimulus_controller_with_targets' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -64,7 +64,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_without_targets' => [self::createMakerTest()
+        yield 'it_generates_stimulus_controller_without_targets' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -87,7 +87,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_values' => [self::createMakerTest()
+        yield 'it_generates_stimulus_controller_with_values' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -116,7 +116,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_classes' => [self::createMakerTest()
+        yield 'it_generates_stimulus_controller_with_classes' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -144,7 +144,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_targets_values_and_classes' => [self::createMakerTest()
+        yield 'it_generates_stimulus_controller_with_targets_values_and_classes' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -180,7 +180,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_typescript_stimulus_controller_interactively' => [self::createMakerTest()
+        yield 'it_generates_typescript_stimulus_controller_interactively' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -195,7 +195,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_typescript_stimulus_controller_when_option_is_set' => [self::createMakerTest()
+        yield 'it_generates_typescript_stimulus_controller_when_option_is_set' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -211,7 +211,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_displays_controller_basic_usage_example' => [self::createMakerTest()
+        yield 'it_displays_controller_basic_usage_example' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     [
@@ -233,7 +233,7 @@ class MakeStimulusControllerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_displays_controller_complete_usage_example' => [self::createMakerTest()
+        yield 'it_displays_controller_complete_usage_example' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     [

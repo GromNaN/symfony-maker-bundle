@@ -13,7 +13,7 @@ namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\MakerBundle\Maker\MakeFunctionalTest;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
@@ -21,7 +21,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
  * @group legacy
  */
 #[Group('legacy')]
-class MakeFunctionalTestTest extends AbstractMakerTestCase
+class MakeFunctionalTestTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -54,7 +54,7 @@ class MakeFunctionalTestTest extends AbstractMakerTestCase
 
     protected static function getPantherTest(): MakerTestDetails
     {
-        return self::createMakerTest()
+        return self::newMakerTest()
             ->skipTest(
                 message: 'Panther test skipped - MAKER_SKIP_PANTHER_TEST set to TRUE.',
                 skipped: getenv('MAKER_SKIP_PANTHER_TEST')

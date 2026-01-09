@@ -12,11 +12,11 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeVoter;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeVoterTest extends AbstractMakerTestCase
+class MakeVoterTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -25,7 +25,7 @@ class MakeVoterTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_voter' => [self::createMakerTest()
+        yield 'it_makes_voter' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -41,7 +41,7 @@ class MakeVoterTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_voter_not_final' => [self::createMakerTest()
+        yield 'it_makes_voter_not_final' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->writeFile(
                     'config/packages/dev/maker.yaml',

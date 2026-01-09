@@ -12,14 +12,14 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeDockerDatabase;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Bundle\MakerBundle\Util\ComposeFileManipulator;
 
 /**
  * @author Jesse Rushlow <jr@rushlow.dev>
  */
-final class MakeDockerDatabaseTest extends AbstractMakerTestCase
+final class MakeDockerDatabaseTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -28,7 +28,7 @@ final class MakeDockerDatabaseTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_uses_3_7_compose_file_version_generates_mysql_database' => [self::createMakerTest()
+        yield 'it_uses_3_7_compose_file_version_generates_mysql_database' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     '0', // Select MySQL as the database
@@ -53,7 +53,7 @@ final class MakeDockerDatabaseTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_creates_mariadb' => [self::createMakerTest()
+        yield 'it_creates_mariadb' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '1', // Select MariaDB as the database
@@ -76,7 +76,7 @@ final class MakeDockerDatabaseTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_creates_postgresql' => [self::createMakerTest()
+        yield 'it_creates_postgresql' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '2', // Select Postgres as the database

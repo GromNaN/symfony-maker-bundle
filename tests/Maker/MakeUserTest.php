@@ -12,11 +12,11 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeUser;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class MakeUserTest extends AbstractMakerTestCase
+class MakeUserTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -25,7 +25,7 @@ class MakeUserTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_entity_with_password' => [self::createMakerTest()
+        yield 'it_generates_entity_with_password' => [self::newMakerTest()
             ->addExtraDependencies('doctrine')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -45,7 +45,7 @@ class MakeUserTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_entity_with_password_and_uuid' => [self::createMakerTest()
+        yield 'it_generates_entity_with_password_and_uuid' => [self::newMakerTest()
             ->addExtraDependencies('doctrine')
             ->addExtraDependencies('symfony/uid')
             ->run(static function (MakerTestRunner $runner) {
@@ -66,7 +66,7 @@ class MakeUserTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_entity_with_password_and_ulid' => [self::createMakerTest()
+        yield 'it_generates_entity_with_password_and_ulid' => [self::newMakerTest()
             ->addExtraDependencies('doctrine')
             ->addExtraDependencies('symfony/uid')
             ->run(static function (MakerTestRunner $runner) {
@@ -87,7 +87,7 @@ class MakeUserTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_non_entity_no_password' => [self::createMakerTest()
+        yield 'it_generates_non_entity_no_password' => [self::newMakerTest()
             ->addExtraDependencies('doctrine')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(

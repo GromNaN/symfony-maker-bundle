@@ -26,7 +26,7 @@ class UseStatementGeneratorTest extends TestCase
             Sorter::class,
             \App\Controller\SomeController::class,
             \SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelper::class,
-            \Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase::class,
+            \Symfony\Bundle\MakerBundle\Test\MakerTestCase::class,
         ]);
 
         $expected = <<< 'EOT'

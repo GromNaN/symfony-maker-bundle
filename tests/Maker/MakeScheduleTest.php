@@ -13,14 +13,14 @@ namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\MakerBundle\Maker\MakeSchedule;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 /**
  * @group legacy
  */
 #[Group('legacy')]
-class MakeScheduleTest extends AbstractMakerTestCase
+class MakeScheduleTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -29,7 +29,7 @@ class MakeScheduleTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_a_schedule_with_transport_name' => [self::createMakerTest()
+        yield 'it_generates_a_schedule_with_transport_name' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'dummy', // use transport name "dummy"
@@ -45,7 +45,7 @@ class MakeScheduleTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule' => [self::createMakerTest()
+        yield 'it_generates_a_schedule' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '', // use default transport name
@@ -61,7 +61,7 @@ class MakeScheduleTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule_select_empty' => [self::createMakerTest()
+        yield 'it_generates_a_schedule_select_empty' => [self::newMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-schedule/standard_setup',
@@ -84,7 +84,7 @@ class MakeScheduleTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule_select_existing_message' => [self::createMakerTest()
+        yield 'it_generates_a_schedule_select_existing_message' => [self::newMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-schedule/standard_setup',

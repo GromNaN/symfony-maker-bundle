@@ -12,10 +12,10 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeMessengerMiddleware;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeMessengerMiddlewareTest extends AbstractMakerTestCase
+class MakeMessengerMiddlewareTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -24,7 +24,7 @@ class MakeMessengerMiddlewareTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_messenger_middleware' => [self::createMakerTest()
+        yield 'it_generates_messenger_middleware' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [

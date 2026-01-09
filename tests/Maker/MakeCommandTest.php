@@ -12,11 +12,11 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeCommand;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeCommandTest extends AbstractMakerTestCase
+class MakeCommandTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -25,7 +25,7 @@ class MakeCommandTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_a_command_no_attributes' => [self::createMakerTest()
+        yield 'it_makes_a_command_no_attributes' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // command name
@@ -36,7 +36,7 @@ class MakeCommandTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_a_command_with_attributes' => [self::createMakerTest()
+        yield 'it_makes_a_command_with_attributes' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // command name
@@ -52,7 +52,7 @@ class MakeCommandTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_a_command_in_custom_namespace' => [self::createMakerTest()
+        yield 'it_makes_a_command_in_custom_namespace' => [self::newMakerTest()
             ->changeRootNamespace('Custom')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->writeFile(

@@ -12,10 +12,10 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeTwigExtension;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeTwigExtensionTest extends AbstractMakerTestCase
+class MakeTwigExtensionTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -24,7 +24,7 @@ class MakeTwigExtensionTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_twig_extension' => [self::createMakerTest()
+        yield 'it_makes_twig_extension' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [

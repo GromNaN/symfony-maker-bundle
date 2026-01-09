@@ -12,10 +12,10 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeValidator;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeValidatorTest extends AbstractMakerTestCase
+class MakeValidatorTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -24,7 +24,7 @@ class MakeValidatorTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_validator' => [self::createMakerTest()
+        yield 'it_makes_validator' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [

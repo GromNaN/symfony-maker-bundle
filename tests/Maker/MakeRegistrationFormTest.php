@@ -12,12 +12,12 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeRegistrationForm;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeRegistrationFormTest extends AbstractMakerTestCase
+class MakeRegistrationFormTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -26,7 +26,7 @@ class MakeRegistrationFormTest extends AbstractMakerTestCase
 
     private static function createRegistrationFormTest(): MakerTestDetails
     {
-        return self::createMakerTest()
+        return self::newMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-registration-form/standard_setup',

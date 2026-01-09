@@ -13,14 +13,14 @@ namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\MakerBundle\Maker\MakeUnitTest;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 /**
  * @group legacy
  */
 #[Group('legacy')]
-class MakeUnitTestTest extends AbstractMakerTestCase
+class MakeUnitTestTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -29,7 +29,7 @@ class MakeUnitTestTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_unit_test' => [self::createMakerTest()
+        yield 'it_makes_unit_test' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [

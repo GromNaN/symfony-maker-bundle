@@ -12,10 +12,10 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeSerializerNormalizer;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeSerializerNormalizerTest extends AbstractMakerTestCase
+class MakeSerializerNormalizerTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -24,7 +24,7 @@ class MakeSerializerNormalizerTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_serializer_normalizer' => [self::createMakerTest()
+        yield 'it_makes_serializer_normalizer' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     ['FooBarNormalizer']
@@ -39,7 +39,7 @@ class MakeSerializerNormalizerTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_serializer_normalizer_with_existing_entity' => [self::createMakerTest()
+        yield 'it_makes_serializer_normalizer_with_existing_entity' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy('make-serializer-normalizer/EntityFixture.php', 'src/Entity/EntityFixture.php');
 

@@ -12,11 +12,11 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeCrud;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeCrudTest extends AbstractMakerTestCase
+class MakeCrudTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -25,7 +25,7 @@ class MakeCrudTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_basic_crud' => [self::createMakerTest()
+        yield 'it_generates_basic_crud' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-crud/SweetFood.php',
@@ -45,7 +45,7 @@ class MakeCrudTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_crud_with_custom_controller' => [self::createMakerTest()
+        yield 'it_generates_crud_with_custom_controller' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-crud/SweetFood.php',
@@ -65,7 +65,7 @@ class MakeCrudTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_crud_with_tests' => [self::createMakerTest()
+        yield 'it_generates_crud_with_tests' => [self::newMakerTest()
             ->addExtraDependencies('symfony/test-pack')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -87,7 +87,7 @@ class MakeCrudTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_correct_class_methods' => [self::createMakerTest()
+        yield 'it_generates_correct_class_methods' => [self::newMakerTest()
             ->addExtraDependencies('symfony/test-pack')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -109,7 +109,7 @@ class MakeCrudTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_crud_custom_repository_with_test' => [self::createMakerTest()
+        yield 'it_generates_crud_custom_repository_with_test' => [self::newMakerTest()
             ->addExtraDependencies('symfony/test-pack')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -136,7 +136,7 @@ class MakeCrudTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_crud_with_custom_root_namespace' => [self::createMakerTest()
+        yield 'it_generates_crud_with_custom_root_namespace' => [self::newMakerTest()
             ->changeRootNamespace('Custom')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->writeFile(
@@ -173,7 +173,7 @@ class MakeCrudTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_crud_using_custom_repository' => [self::createMakerTest()
+        yield 'it_generates_crud_using_custom_repository' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-crud/SweetFoodCustomRepository.php',
@@ -201,7 +201,7 @@ class MakeCrudTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_crud_with_no_base_template' => [self::createMakerTest()
+        yield 'it_generates_crud_with_no_base_template' => [self::newMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-crud/SweetFood.php',

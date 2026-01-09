@@ -12,12 +12,12 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeResetPassword;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Bundle\MakerBundle\Util\ClassSourceManipulator;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeResetPasswordTest extends AbstractMakerTestCase
+class MakeResetPasswordTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -26,7 +26,7 @@ class MakeResetPasswordTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_with_normal_setup' => [self::createMakerTest()
+        yield 'it_generates_with_normal_setup' => [self::newMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->run(static function (MakerTestRunner $runner) {
@@ -82,7 +82,7 @@ class MakeResetPasswordTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_tests' => [self::createMakerTest()
+        yield 'it_generates_tests' => [self::newMakerTest()
             // Needed to assertEmails && NotCompromisedPassword
             ->addExtraDependencies('symfony/mailer', 'symfony/http-client')
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
@@ -130,7 +130,7 @@ class MakeResetPasswordTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_uuid' => [self::createMakerTest()
+        yield 'it_generates_with_uuid' => [self::newMakerTest()
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/uid')
             ->run(static function (MakerTestRunner $runner) {
@@ -190,7 +190,7 @@ class MakeResetPasswordTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_ulid' => [self::createMakerTest()
+        yield 'it_generates_with_ulid' => [self::newMakerTest()
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/uid')
             ->run(static function (MakerTestRunner $runner) {
@@ -250,7 +250,7 @@ class MakeResetPasswordTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_translator_installed' => [self::createMakerTest()
+        yield 'it_generates_with_translator_installed' => [self::newMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/translation')
@@ -268,7 +268,7 @@ class MakeResetPasswordTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_custom_config' => [self::createMakerTest()
+        yield 'it_generates_with_custom_config' => [self::newMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->run(static function (MakerTestRunner $runner) {
@@ -299,7 +299,7 @@ class MakeResetPasswordTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_amends_configuration' => [self::createMakerTest()
+        yield 'it_amends_configuration' => [self::newMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->run(static function (MakerTestRunner $runner) {
@@ -327,7 +327,7 @@ class MakeResetPasswordTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_custom_user' => [self::createMakerTest()
+        yield 'it_generates_with_custom_user' => [self::newMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->run(static function (MakerTestRunner $runner) {
