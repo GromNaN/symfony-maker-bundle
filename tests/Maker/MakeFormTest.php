@@ -24,7 +24,7 @@ class MakeFormTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_basic_form' => [self::newMakerTest()
+        yield 'it_generates_basic_form' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // form name
@@ -36,7 +36,7 @@ class MakeFormTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_form_with_entity' => [self::newMakerTest()
+        yield 'it_generates_form_with_entity' => [self::buildMakerTest()
             ->addExtraDependencies('orm')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -58,7 +58,7 @@ class MakeFormTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_form_with_non_entity_dto' => [self::newMakerTest()
+        yield 'it_generates_form_with_non_entity_dto' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-form/TaskData.php',
@@ -75,7 +75,7 @@ class MakeFormTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_form_with_single_table_inheritance_entity' => [self::newMakerTest()
+        yield 'it_generates_form_with_single_table_inheritance_entity' => [self::buildMakerTest()
             ->addExtraDependencies('orm')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -97,7 +97,7 @@ class MakeFormTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_form_with_many_to_one_relation' => [self::newMakerTest()
+        yield 'it_generates_form_with_many_to_one_relation' => [self::buildMakerTest()
             ->addExtraDependencies('orm')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -118,7 +118,7 @@ class MakeFormTest extends MakerTestCase
                 self::runFormTest($runner, 'it_generates_form_with_many_to_one_relation.php');
             }),
         ];
-        yield 'it_generates_form_with_one_to_many_relation' => [self::newMakerTest()
+        yield 'it_generates_form_with_one_to_many_relation' => [self::buildMakerTest()
             ->addExtraDependencies('orm')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -139,7 +139,7 @@ class MakeFormTest extends MakerTestCase
                 self::runFormTest($runner, 'it_generates_form_with_one_to_many_relation.php');
             }),
         ];
-        yield 'it_generates_form_with_many_to_many_relation' => [self::newMakerTest()
+        yield 'it_generates_form_with_many_to_many_relation' => [self::buildMakerTest()
             ->addExtraDependencies('orm')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -160,7 +160,7 @@ class MakeFormTest extends MakerTestCase
                 self::runFormTest($runner, 'it_generates_form_with_many_to_many_relation.php');
             }),
         ];
-        yield 'it_generates_form_with_one_to_one_relation' => [self::newMakerTest()
+        yield 'it_generates_form_with_one_to_one_relation' => [self::buildMakerTest()
             ->addExtraDependencies('orm')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -181,7 +181,7 @@ class MakeFormTest extends MakerTestCase
                 self::runFormTest($runner, 'it_generates_form_with_one_to_one_relation.php');
             }),
         ];
-        yield 'it_generates_form_with_embeddable_entity' => [self::newMakerTest()
+        yield 'it_generates_form_with_embeddable_entity' => [self::buildMakerTest()
             ->addExtraDependencies('orm')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(

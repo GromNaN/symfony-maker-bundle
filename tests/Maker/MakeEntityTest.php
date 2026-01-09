@@ -27,7 +27,7 @@ class MakeEntityTest extends MakerTestCase
 
     private static function createMakeEntityTest(bool $withDatabase = true): MakerTestDetails
     {
-        return self::newMakerTest()
+        return self::buildMakerTest()
             ->preRun(static function (MakerTestRunner $runner) use ($withDatabase) {
                 if ($withDatabase) {
                     $runner->configureDatabase();
@@ -39,7 +39,7 @@ class MakeEntityTest extends MakerTestCase
     {
         if (getenv('MAKER_SKIP_MERCURE_TEST')) {
             // This test is skipped, don't worry about persistence
-            return self::newMakerTest()
+            return self::buildMakerTest()
                 ->skipTest('MAKER_SKIP_MERCURE_TEST set to true')
             ;
         }

@@ -24,7 +24,7 @@ class MakeWebhookTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_webhook_with_no_prior_config_file' => [self::newMakerTest()
+        yield 'it_makes_webhook_with_no_prior_config_file' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'remote_service',    // webhook name
@@ -62,7 +62,7 @@ class MakeWebhookTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_webhook_with_prior_webhook' => [self::newMakerTest()
+        yield 'it_makes_webhook_with_prior_webhook' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/webhook')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy('make-webhook/webhook.yaml', 'config/packages/webhook.yaml');
@@ -121,7 +121,7 @@ class MakeWebhookTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_webhook_with_single_matcher' => [self::newMakerTest()
+        yield 'it_makes_webhook_with_single_matcher' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'remote_service',  // webhook name
@@ -152,7 +152,7 @@ class MakeWebhookTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_webhook_with_multiple_matchers' => [self::newMakerTest()
+        yield 'it_makes_webhook_with_multiple_matchers' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'remote_service',  // webhook name
@@ -206,7 +206,7 @@ class MakeWebhookTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_webhook_with_expression_language_injection' => [self::newMakerTest()
+        yield 'it_makes_webhook_with_expression_language_injection' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/expression-language')
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([

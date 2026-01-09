@@ -24,7 +24,7 @@ class MakeMessengerMiddlewareTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_messenger_middleware' => [self::newMakerTest()
+        yield 'it_generates_messenger_middleware' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [

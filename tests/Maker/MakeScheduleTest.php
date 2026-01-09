@@ -29,7 +29,7 @@ class MakeScheduleTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_a_schedule_with_transport_name' => [self::newMakerTest()
+        yield 'it_generates_a_schedule_with_transport_name' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'dummy', // use transport name "dummy"
@@ -45,7 +45,7 @@ class MakeScheduleTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule' => [self::newMakerTest()
+        yield 'it_generates_a_schedule' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '', // use default transport name
@@ -61,7 +61,7 @@ class MakeScheduleTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule_select_empty' => [self::newMakerTest()
+        yield 'it_generates_a_schedule_select_empty' => [self::buildMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-schedule/standard_setup',
@@ -84,7 +84,7 @@ class MakeScheduleTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule_select_existing_message' => [self::newMakerTest()
+        yield 'it_generates_a_schedule_select_existing_message' => [self::buildMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-schedule/standard_setup',

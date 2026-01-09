@@ -24,7 +24,7 @@ class MakeFixturesTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_fixtures' => [self::newMakerTest()
+        yield 'it_generates_fixtures' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'FooFixtures',

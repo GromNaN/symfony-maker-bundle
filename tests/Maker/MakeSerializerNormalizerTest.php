@@ -24,7 +24,7 @@ class MakeSerializerNormalizerTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_serializer_normalizer' => [self::newMakerTest()
+        yield 'it_makes_serializer_normalizer' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     ['FooBarNormalizer']
@@ -39,7 +39,7 @@ class MakeSerializerNormalizerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_serializer_normalizer_with_existing_entity' => [self::newMakerTest()
+        yield 'it_makes_serializer_normalizer_with_existing_entity' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy('make-serializer-normalizer/EntityFixture.php', 'src/Entity/EntityFixture.php');
 

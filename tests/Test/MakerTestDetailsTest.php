@@ -27,8 +27,8 @@ class MakerTestDetailsTest extends TestCase
 {
     public function testAddExtraDependencies()
     {
-        $details = new MakerTestDetails($this->createMock(MakerInterface::class));
-
+        $details = new MakerTestDetails();
+        $details->setMaker($this->createMock(MakerInterface::class));
         $details->addExtraDependencies('twig');
 
         self::assertSame(['twig'], $details->getExtraDependencies());
@@ -40,8 +40,8 @@ class MakerTestDetailsTest extends TestCase
 
     public function testAddRequiredPackageVersions()
     {
-        $details = new MakerTestDetails($this->createMock(MakerInterface::class));
-
+        $details = new MakerTestDetails();
+        $details->setMaker($this->createMock(MakerInterface::class));
         $details->addRequiredPackageVersion('twig', '4.x');
 
         self::assertSame([['name' => 'twig', 'version_constraint' => '4.x']], $details->getRequiredPackageVersions());
@@ -55,8 +55,8 @@ class MakerTestDetailsTest extends TestCase
 
     public function testGetDependencies()
     {
-        $details = new MakerTestDetails(new TestMakerFixture());
-
+        $details = new MakerTestDetails();
+        $details->setMaker(new TestMakerFixture());
         $details->addExtraDependencies('twig');
 
         self::assertSame(['security', 'router', 'twig'], $details->getDependencies());

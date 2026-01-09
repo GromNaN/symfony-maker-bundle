@@ -26,7 +26,7 @@ class MakeRegistrationFormTest extends MakerTestCase
 
     private static function createRegistrationFormTest(): MakerTestDetails
     {
-        return self::newMakerTest()
+        return self::buildMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-registration-form/standard_setup',

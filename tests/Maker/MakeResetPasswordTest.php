@@ -26,7 +26,7 @@ class MakeResetPasswordTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_with_normal_setup' => [self::newMakerTest()
+        yield 'it_generates_with_normal_setup' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->run(static function (MakerTestRunner $runner) {
@@ -82,7 +82,7 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_tests' => [self::newMakerTest()
+        yield 'it_generates_tests' => [self::buildMakerTest()
             // Needed to assertEmails && NotCompromisedPassword
             ->addExtraDependencies('symfony/mailer', 'symfony/http-client')
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
@@ -130,7 +130,7 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_uuid' => [self::newMakerTest()
+        yield 'it_generates_with_uuid' => [self::buildMakerTest()
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/uid')
             ->run(static function (MakerTestRunner $runner) {
@@ -190,7 +190,7 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_ulid' => [self::newMakerTest()
+        yield 'it_generates_with_ulid' => [self::buildMakerTest()
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/uid')
             ->run(static function (MakerTestRunner $runner) {
@@ -250,7 +250,7 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_translator_installed' => [self::newMakerTest()
+        yield 'it_generates_with_translator_installed' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/translation')
@@ -268,7 +268,7 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_custom_config' => [self::newMakerTest()
+        yield 'it_generates_with_custom_config' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->run(static function (MakerTestRunner $runner) {
@@ -299,7 +299,7 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_amends_configuration' => [self::newMakerTest()
+        yield 'it_amends_configuration' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->run(static function (MakerTestRunner $runner) {
@@ -327,7 +327,7 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_custom_user' => [self::newMakerTest()
+        yield 'it_generates_with_custom_user' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->run(static function (MakerTestRunner $runner) {
