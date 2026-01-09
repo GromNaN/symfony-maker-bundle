@@ -11,7 +11,6 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\MakerBundle\Maker\MakeCommand;
 use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
