@@ -20,7 +20,7 @@ use Symfony\Component\Process\Process;
 
 abstract class AbstractMakerTestCase extends TestCase
 {
-    private static ?KernelInterface $kernel = null;
+    private ?KernelInterface $kernel = null;
 
     /**
      * @dataProvider getTestDetails
@@ -28,6 +28,7 @@ abstract class AbstractMakerTestCase extends TestCase
     #[DataProvider('getTestDetails')]
     public function testExecute(MakerTestDetails $makerTestDetails): void
     {
+        $makerTestDetails->setMaker($this->getMakerInstance($this->getMakerClass()));
         $this->executeMakerCommand($makerTestDetails);
     }
 
@@ -39,11 +40,11 @@ abstract class AbstractMakerTestCase extends TestCase
     /**
      * @return class-string<MakerInterface>
      */
-    abstract protected static function getMakerClass(): string;
+    abstract protected function getMakerClass(): string;
 
     protected static function createMakerTest(): MakerTestDetails
     {
-        return new MakerTestDetails(self::getMakerInstance(static::getMakerClass()));
+        return new MakerTestDetails();
     }
 
     protected function executeMakerCommand(MakerTestDetails $testDetails): void
@@ -92,17 +93,17 @@ abstract class AbstractMakerTestCase extends TestCase
         self::assertEquals(1, substr_count($haystack, $needle), \sprintf('Found more than %d occurrences of "%s" in "%s"', $count, $needle, $haystack));
     }
 
-    private static function getMakerInstance(string $makerClass): MakerInterface
+    private function getMakerInstance(string $makerClass): MakerInterface
     {
-        if (null === self::$kernel) {
-            self::$kernel = static::createKernel();
-            self::$kernel->boot();
+        if (null === $this->kernel) {
+            $this->kernel = $this->createKernel();
+            $this->kernel->boot();
         }
 
-        return self::$kernel->getContainer()->get('maker_locator_for_tests')->get($makerClass);
+        return $this->kernel->getContainer()->get('maker_locator_for_tests')->get($makerClass);
     }
 
-    protected static function createKernel(): KernelInterface
+    protected function createKernel(): KernelInterface
     {
         return new MakerTestKernel('dev', true);
     }

@@ -22,7 +22,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
  */
 class MakeControllerTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeController::class;
     }
