@@ -12,13 +12,13 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeMessage;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Messenger\Attribute\AsMessage;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeMessageTest extends AbstractMakerTestCase
+class MakeMessageTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -27,7 +27,7 @@ class MakeMessageTest extends AbstractMakerTestCase
 
     private static function createMakeMessageTest(): MakerTestDetails
     {
-        return self::createMakerTest()
+        return self::newMakerTest()
             ->preRun(function (MakerTestRunner $runner) {
                 $runner->writeFile(
                     'config/services_test.yaml',

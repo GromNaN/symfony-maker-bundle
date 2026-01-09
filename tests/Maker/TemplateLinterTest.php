@@ -12,7 +12,7 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeVoter;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
  *
  * @internal
  */
-final class TemplateLinterTest extends AbstractMakerTestCase
+final class TemplateLinterTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -32,7 +32,7 @@ final class TemplateLinterTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'lints_templates_with_custom_php_cs_fixer_and_config' => [self::createMakerTest()
+        yield 'lints_templates_with_custom_php_cs_fixer_and_config' => [self::newMakerTest()
             ->addExtraDependencies('php-cs-fixer/shim')
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy('template-linter/php-cs-fixer.test.php', 'php-cs-fixer.test.php');
@@ -58,7 +58,7 @@ final class TemplateLinterTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'lints_templates_with_flex_generated_config_file' => [self::createMakerTest()
+        yield 'lints_templates_with_flex_generated_config_file' => [self::newMakerTest()
             ->addExtraDependencies('php-cs-fixer/shim')
             ->run(function (MakerTestRunner $runner) {
                 $runner->replaceInFile(
@@ -84,7 +84,7 @@ final class TemplateLinterTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'lints_templates_with_bundled_php_cs_fixer' => [self::createMakerTest()
+        yield 'lints_templates_with_bundled_php_cs_fixer' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 // Voter class name
                 $output = $runner->runMaker(['FooBar']);

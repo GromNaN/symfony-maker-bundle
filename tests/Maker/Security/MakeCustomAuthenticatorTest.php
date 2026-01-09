@@ -12,13 +12,13 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker\Security;
 
 use Symfony\Bundle\MakerBundle\Maker\Security\MakeCustomAuthenticator;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 /**
  * @author Jesse Rushlow <jr@rushlow.dev>
  */
-class MakeCustomAuthenticatorTest extends AbstractMakerTestCase
+class MakeCustomAuthenticatorTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -27,7 +27,7 @@ class MakeCustomAuthenticatorTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'generates_custom_authenticator' => [self::createMakerTest()
+        yield 'generates_custom_authenticator' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'FixtureAuthenticator', // Authenticator Name

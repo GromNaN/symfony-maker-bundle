@@ -12,10 +12,10 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeWebhook;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeWebhookTest extends AbstractMakerTestCase
+class MakeWebhookTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -24,7 +24,7 @@ class MakeWebhookTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_webhook_with_no_prior_config_file' => [self::createMakerTest()
+        yield 'it_makes_webhook_with_no_prior_config_file' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'remote_service',    // webhook name
@@ -62,7 +62,7 @@ class MakeWebhookTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_webhook_with_prior_webhook' => [self::createMakerTest()
+        yield 'it_makes_webhook_with_prior_webhook' => [self::newMakerTest()
             ->addExtraDependencies('symfony/webhook')
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy('make-webhook/webhook.yaml', 'config/packages/webhook.yaml');
@@ -121,7 +121,7 @@ class MakeWebhookTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_webhook_with_single_matcher' => [self::createMakerTest()
+        yield 'it_makes_webhook_with_single_matcher' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'remote_service',  // webhook name
@@ -152,7 +152,7 @@ class MakeWebhookTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_webhook_with_multiple_matchers' => [self::createMakerTest()
+        yield 'it_makes_webhook_with_multiple_matchers' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'remote_service',  // webhook name
@@ -206,7 +206,7 @@ class MakeWebhookTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_webhook_with_expression_language_injection' => [self::createMakerTest()
+        yield 'it_makes_webhook_with_expression_language_injection' => [self::newMakerTest()
             ->addExtraDependencies('symfony/expression-language')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
