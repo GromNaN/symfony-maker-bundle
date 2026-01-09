@@ -24,7 +24,7 @@ class MakeStimulusControllerTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_stimulus_controller' => [self::newMakerTest()
+        yield 'it_generates_stimulus_controller' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -37,7 +37,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_targets' => [self::newMakerTest()
+        yield 'it_generates_stimulus_controller_with_targets' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -64,7 +64,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_without_targets' => [self::newMakerTest()
+        yield 'it_generates_stimulus_controller_without_targets' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -87,7 +87,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_values' => [self::newMakerTest()
+        yield 'it_generates_stimulus_controller_with_values' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -116,7 +116,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_classes' => [self::newMakerTest()
+        yield 'it_generates_stimulus_controller_with_classes' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -144,7 +144,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_stimulus_controller_with_targets_values_and_classes' => [self::newMakerTest()
+        yield 'it_generates_stimulus_controller_with_targets_values_and_classes' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -180,7 +180,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_typescript_stimulus_controller_interactively' => [self::newMakerTest()
+        yield 'it_generates_typescript_stimulus_controller_interactively' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -195,7 +195,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_typescript_stimulus_controller_when_option_is_set' => [self::newMakerTest()
+        yield 'it_generates_typescript_stimulus_controller_when_option_is_set' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -211,7 +211,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_displays_controller_basic_usage_example' => [self::newMakerTest()
+        yield 'it_displays_controller_basic_usage_example' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     [
@@ -233,7 +233,7 @@ class MakeStimulusControllerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_displays_controller_complete_usage_example' => [self::newMakerTest()
+        yield 'it_displays_controller_complete_usage_example' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     [

@@ -19,7 +19,7 @@ class MakeTwigComponentTest extends MakerTestCase
 {
     public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_twig_component' => [self::newMakerTest()
+        yield 'it_generates_twig_component' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/ux-twig-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['Alert']);
@@ -37,7 +37,7 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_twig_component_in_non_default_namespace' => [self::newMakerTest()
+        yield 'it_generates_twig_component_in_non_default_namespace' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/ux-twig-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -60,7 +60,7 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_pascal_case_twig_component' => [self::newMakerTest()
+        yield 'it_generates_pascal_case_twig_component' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/ux-twig-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['FormInput']);
@@ -78,7 +78,7 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_live_component' => [self::newMakerTest()
+        yield 'it_generates_live_component' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/ux-live-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['Alert', 'y']);
@@ -96,7 +96,7 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_pascal_case_live_component' => [self::newMakerTest()
+        yield 'it_generates_pascal_case_live_component' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/ux-live-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['FormInput', 'y']);
@@ -114,7 +114,7 @@ class MakeTwigComponentTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_live_component_on_subdirectory' => [self::newMakerTest()
+        yield 'it_generates_live_component_on_subdirectory' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/ux-live-component', 'symfony/twig-bundle')
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(['Form\Input', 'y']);

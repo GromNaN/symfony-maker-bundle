@@ -39,7 +39,7 @@ final class MakerTestDetails
     public function __construct(
         private ?MakerInterface $maker = null,
     ) {
-        if (null === $this->maker) {
+        if (null !== $this->maker) {
             trigger_deprecation('symfony/maker-bundle', 'v1.66.0', 'Passing a MakerInterface to the %s constructor is deprecated.', __CLASS__);
         }
     }
@@ -188,7 +188,7 @@ final class MakerTestDetails
     public function getRunCallback(): \Closure
     {
         if (!$this->runCallback) {
-            throw new \Exception('Don\'t forget to call ->run()');
+            throw new \Exception('Don\'t forget to call ->run().');
         }
 
         return $this->runCallback;

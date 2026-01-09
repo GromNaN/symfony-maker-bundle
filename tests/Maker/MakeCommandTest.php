@@ -25,7 +25,7 @@ class MakeCommandTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_a_command_no_attributes' => [self::newMakerTest()
+        yield 'it_makes_a_command_no_attributes' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // command name
@@ -36,7 +36,7 @@ class MakeCommandTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_a_command_with_attributes' => [self::newMakerTest()
+        yield 'it_makes_a_command_with_attributes' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // command name
@@ -52,7 +52,7 @@ class MakeCommandTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_a_command_in_custom_namespace' => [self::newMakerTest()
+        yield 'it_makes_a_command_in_custom_namespace' => [self::buildMakerTest()
             ->changeRootNamespace('Custom')
             ->run(function (MakerTestRunner $runner) {
                 $runner->writeFile(

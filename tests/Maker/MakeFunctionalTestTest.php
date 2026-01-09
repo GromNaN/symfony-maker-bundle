@@ -54,7 +54,7 @@ class MakeFunctionalTestTest extends MakerTestCase
 
     protected static function getPantherTest(): MakerTestDetails
     {
-        return self::newMakerTest()
+        return self::buildMakerTest()
             ->skipTest(
                 message: 'Panther test skipped - MAKER_SKIP_PANTHER_TEST set to TRUE.',
                 skipped: getenv('MAKER_SKIP_PANTHER_TEST')

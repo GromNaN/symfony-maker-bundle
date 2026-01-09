@@ -28,7 +28,7 @@ class MakeFormLoginTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'generates_form_login_using_defaults' => [self::newMakerTest()
+        yield 'generates_form_login_using_defaults' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 self::makeUser($runner);
 
@@ -54,7 +54,7 @@ class MakeFormLoginTest extends MakerTestCase
             }),
         ];
 
-        yield 'generates_form_login_without_logout' => [self::newMakerTest()
+        yield 'generates_form_login_without_logout' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 self::makeUser($runner);
 
@@ -77,7 +77,7 @@ class MakeFormLoginTest extends MakerTestCase
             }),
         ];
 
-        yield 'generates_form_login_with_custom_controller_name' => [self::newMakerTest()
+        yield 'generates_form_login_with_custom_controller_name' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 self::makeUser($runner);
 
@@ -100,7 +100,7 @@ class MakeFormLoginTest extends MakerTestCase
             }),
         ];
 
-        yield 'generates_form_login_using_defaults_with_test' => [self::newMakerTest()
+        yield 'generates_form_login_using_defaults_with_test' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 // Make the UserPasswordHasherInterface available in the test
                 $runner->renderTemplateFile('security/make-form-login/FixtureController.php', 'src/Controller/FixtureController.php', []);

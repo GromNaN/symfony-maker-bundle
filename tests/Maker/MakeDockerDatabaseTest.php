@@ -28,7 +28,7 @@ final class MakeDockerDatabaseTest extends MakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_uses_3_7_compose_file_version_generates_mysql_database' => [self::newMakerTest()
+        yield 'it_uses_3_7_compose_file_version_generates_mysql_database' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     '0', // Select MySQL as the database
@@ -53,7 +53,7 @@ final class MakeDockerDatabaseTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_creates_mariadb' => [self::newMakerTest()
+        yield 'it_creates_mariadb' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '1', // Select MariaDB as the database
@@ -76,7 +76,7 @@ final class MakeDockerDatabaseTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_creates_postgresql' => [self::newMakerTest()
+        yield 'it_creates_postgresql' => [self::buildMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '2', // Select Postgres as the database
