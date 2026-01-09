@@ -138,7 +138,7 @@ final class MakerTestEnvironment
     {
         // Copy MakerBundle to a "repo" directory for tests
         if (!file_exists($makerRepoPath = \sprintf('%s/maker-repo', $this->cachePath))) {
-            MakerTestProcess::create(\sprintf('git clone %s %s', $this->rootPath, $makerRepoPath), $this->cachePath)->run();
+            MakerTestProcess::create(['git', 'clone', $this->rootPath, $makerRepoPath], $this->cachePath)->run();
         }
 
         if (!$this->fs->exists($this->flexPath)) {
@@ -148,15 +148,7 @@ final class MakerTestEnvironment
         if (!$this->fs->exists($this->path)) {
             try {
                 // let's do some magic here git is faster than copy
-                MakerTestProcess::create(
-                    '\\' === \DIRECTORY_SEPARATOR ? 'git clone %FLEX_PATH% %APP_PATH%' : 'git clone "$FLEX_PATH" "$APP_PATH"',
-                    \dirname($this->flexPath),
-                    [
-                        'FLEX_PATH' => $this->flexPath,
-                        'APP_PATH' => $this->path,
-                    ]
-                )
-                    ->run();
+                MakerTestProcess::create(['git', 'clone', $this->flexPath, $this->path], \dirname($this->flexPath))->run();
 
                 // In Window's we have to require MakerBundle in each project - git clone doesn't symlink well
                 if ($this->isWindows) {
@@ -194,7 +186,7 @@ final class MakerTestEnvironment
         }
     }
 
-    public function runCommand(string $command): MakerTestProcess
+    public function runCommand(string|array $command): MakerTestProcess
     {
         return MakerTestProcess::create($command, $this->path)->run();
     }
@@ -415,8 +407,7 @@ echo json_encode($missingDependencies);
 
     private function composerRequireMakerBundle(string $projectDirectory): void
     {
-        MakerTestProcess::create('composer require --dev '.$this->packageName, $projectDirectory)
-            ->run();
+        MakerTestProcess::create(['composer', 'require', '--dev', $this->packageName], $projectDirectory)->run();
 
         $makerRepoSrcPath = \sprintf('%s/maker-repo/src', $this->cachePath);
 
@@ -442,10 +433,10 @@ echo json_encode($missingDependencies);
             ],
         ];
 
-        MakerTestProcess::create(\sprintf(
-            'composer repo add %s \'%s\' ',
+        MakerTestProcess::create([
+            'composer', 'repo', 'add',
             $this->packageName,
             json_encode($repo, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES),
-        ), $projectDirectory)->run();
+        ], $projectDirectory)->run();
     }
 }
