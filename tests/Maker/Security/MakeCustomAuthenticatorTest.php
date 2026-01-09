@@ -20,7 +20,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
  */
 class MakeCustomAuthenticatorTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeCustomAuthenticator::class;
     }

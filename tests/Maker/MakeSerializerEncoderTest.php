@@ -17,7 +17,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 class MakeSerializerEncoderTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeSerializerEncoder::class;
     }

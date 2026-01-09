@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[Group('legacy')]
 class MakeAuthenticatorTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeAuthenticator::class;
     }

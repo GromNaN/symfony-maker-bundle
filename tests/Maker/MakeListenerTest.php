@@ -245,7 +245,7 @@ class MakeListenerTest extends AbstractMakerTestCase
         ];
     }
 
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeListener::class;
     }

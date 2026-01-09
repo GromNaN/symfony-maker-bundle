@@ -19,7 +19,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class MakeResetPasswordTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeResetPassword::class;
     }

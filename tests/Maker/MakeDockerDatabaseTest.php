@@ -21,7 +21,7 @@ use Symfony\Bundle\MakerBundle\Util\ComposeFileManipulator;
  */
 final class MakeDockerDatabaseTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeDockerDatabase::class;
     }

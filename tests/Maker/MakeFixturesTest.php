@@ -17,7 +17,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 class MakeFixturesTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeFixtures::class;
     }

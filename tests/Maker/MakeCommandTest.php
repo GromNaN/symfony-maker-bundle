@@ -18,7 +18,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class MakeCommandTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeCommand::class;
     }
