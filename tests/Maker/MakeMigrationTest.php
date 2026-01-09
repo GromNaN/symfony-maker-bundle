@@ -143,14 +143,14 @@ class MakeMigrationTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_nowdoc_migration' => [$this->createMakeMigrationTest()
+        yield 'it_generates_a_nowdoc_migration' => [self::createMakeMigrationTest()
             ->addRequiredPackageVersion('doctrine/doctrine-migrations-bundle', '>=3')
             ->run(function (MakerTestRunner $runner) {
                 $runner->runConsole('make:migration', [], '--nowdoc');
 
                 $output = $runner->runMaker([/* no input */]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
             }),
         ];
     }
