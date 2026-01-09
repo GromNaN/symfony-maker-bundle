@@ -433,10 +433,6 @@ echo json_encode($missingDependencies);
             ],
         ];
 
-        MakerTestProcess::create([
-            'composer', 'repo', 'add',
-            $this->packageName,
-            json_encode($repo, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES),
-        ], $projectDirectory)->run();
+        MakerTestProcess::create(['composer', 'repo', 'add', $this->packageName, json_encode($repo)], $projectDirectory)->run();
     }
 }
