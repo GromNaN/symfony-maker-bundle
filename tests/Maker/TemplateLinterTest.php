@@ -24,7 +24,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
  */
 final class TemplateLinterTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         // We can use any maker here - MakeVoter is the simplest for now.
         return MakeVoter::class;

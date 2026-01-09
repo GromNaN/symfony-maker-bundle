@@ -22,7 +22,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 #[Group('legacy')]
 class MakeSubscriberTest extends AbstractMakerTestCase
 {
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeSubscriber::class;
     }

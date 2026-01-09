@@ -133,7 +133,7 @@ class MakeTwigComponentTest extends AbstractMakerTestCase
         ];
     }
 
-    protected static function getMakerClass(): string
+    protected function getMakerClass(): string
     {
         return MakeTwigComponent::class;
     }
