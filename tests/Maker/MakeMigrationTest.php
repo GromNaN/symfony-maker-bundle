@@ -12,13 +12,13 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeMigration;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Bundle\MakerBundle\Util\CliOutputHelper;
 use Symfony\Component\Finder\Finder;
 
-class MakeMigrationTest extends AbstractMakerTestCase
+class MakeMigrationTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -27,7 +27,7 @@ class MakeMigrationTest extends AbstractMakerTestCase
 
     private static function createMakeMigrationTest(): MakerTestDetails
     {
-        return self::createMakerTest()
+        return self::newMakerTest()
             // doctrine-migrations-bundle only requires doctrine-bundle, which
             // only requires doctrine/dbal. But we're testing with the ORM,
             // so let's install it

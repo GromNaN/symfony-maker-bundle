@@ -12,13 +12,14 @@
 namespace Symfony\Bundle\MakerBundle\Test;
 
 use Composer\Semver\Semver;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\MakerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
 
 /**
- * @deprecated Since symfony/maker-bundle 1.66: Use {@see AbstractMakerTestCase} instead, and declare static methods.
+ * @method static iterable<array{0: MakerTestDetails}> getTestDetails()
  */
 abstract class MakerTestCase extends TestCase
 {
@@ -29,18 +30,27 @@ abstract class MakerTestCase extends TestCase
      *
      * @return void
      */
+    #[DataProvider('getTestDetails')]
     public function testExecute(MakerTestDetails $makerTestDetails)
     {
         $this->executeMakerCommand($makerTestDetails);
     }
 
-    abstract public function getTestDetails();
-
     abstract protected function getMakerClass(): string;
 
+    /**
+     * @deprecated Since 1.66.0, use static::newMakerTest() instead
+     */
     protected function createMakerTest(): MakerTestDetails
     {
+        trigger_deprecation('symfony/maker-bundle', '1.66.0', 'The "%s()" method is deprecated. Use "self::newMakerTest()" instead.', __METHOD__, self::class);
+
         return new MakerTestDetails($this->getMakerInstance($this->getMakerClass()));
+    }
+
+    protected static function newMakerTest(): MakerTestDetails
+    {
+        return new MakerTestDetails();
     }
 
     /**
@@ -56,6 +66,7 @@ abstract class MakerTestCase extends TestCase
             $this->markTestSkipped($testDetails->getSkippedTestMessage());
         }
 
+        $testDetails->setMaker($this->getMakerInstance($this->getMakerClass()));
         $testEnv = MakerTestEnvironment::create($testDetails);
 
         // prepare environment to test
@@ -90,9 +101,9 @@ abstract class MakerTestCase extends TestCase
     /**
      * @return void
      */
-    protected function assertContainsCount(string $needle, string $haystack, int $count)
+    protected static function assertContainsCount(string $needle, string $haystack, int $count)
     {
-        $this->assertEquals(1, substr_count($haystack, $needle), \sprintf('Found more than %d occurrences of "%s" in "%s"', $count, $needle, $haystack));
+        self::assertEquals(1, substr_count($haystack, $needle), \sprintf('Found more than %d occurrences of "%s" in "%s"', $count, $needle, $haystack));
     }
 
     private function getMakerInstance(string $makerClass): MakerInterface

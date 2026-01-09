@@ -13,14 +13,14 @@ namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\MakerBundle\Maker\MakeSubscriber;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
 /**
  * @group legacy
  */
 #[Group('legacy')]
-class MakeSubscriberTest extends AbstractMakerTestCase
+class MakeSubscriberTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -29,7 +29,7 @@ class MakeSubscriberTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_subscriber_for_known_event' => [self::createMakerTest()
+        yield 'it_makes_subscriber_for_known_event' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -47,7 +47,7 @@ class MakeSubscriberTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_subscriber_for_custom_event_class' => [self::createMakerTest()
+        yield 'it_makes_subscriber_for_custom_event_class' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -65,7 +65,7 @@ class MakeSubscriberTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_subscriber_for_unknown_event_class' => [self::createMakerTest()
+        yield 'it_makes_subscriber_for_unknown_event_class' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [

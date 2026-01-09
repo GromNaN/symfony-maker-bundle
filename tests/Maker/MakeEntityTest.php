@@ -12,13 +12,13 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeEntity;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
-class MakeEntityTest extends AbstractMakerTestCase
+class MakeEntityTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -27,7 +27,7 @@ class MakeEntityTest extends AbstractMakerTestCase
 
     private static function createMakeEntityTest(bool $withDatabase = true): MakerTestDetails
     {
-        return self::createMakerTest()
+        return self::newMakerTest()
             ->preRun(function (MakerTestRunner $runner) use ($withDatabase) {
                 if ($withDatabase) {
                     $runner->configureDatabase();
@@ -39,7 +39,7 @@ class MakeEntityTest extends AbstractMakerTestCase
     {
         if (getenv('MAKER_SKIP_MERCURE_TEST')) {
             // This test is skipped, don't worry about persistence
-            return self::createMakerTest()
+            return self::newMakerTest()
                 ->skipTest('MAKER_SKIP_MERCURE_TEST set to true')
             ;
         }

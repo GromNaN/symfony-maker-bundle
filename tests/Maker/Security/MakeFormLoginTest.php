@@ -12,14 +12,14 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker\Security;
 
 use Symfony\Bundle\MakerBundle\Maker\Security\MakeFormLogin;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @author Jesse Rushlow <jr@rushlow.dev>
  */
-class MakeFormLoginTest extends AbstractMakerTestCase
+class MakeFormLoginTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -28,7 +28,7 @@ class MakeFormLoginTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'generates_form_login_using_defaults' => [self::createMakerTest()
+        yield 'generates_form_login_using_defaults' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 self::makeUser($runner);
 
@@ -54,7 +54,7 @@ class MakeFormLoginTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'generates_form_login_without_logout' => [self::createMakerTest()
+        yield 'generates_form_login_without_logout' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 self::makeUser($runner);
 
@@ -77,7 +77,7 @@ class MakeFormLoginTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'generates_form_login_with_custom_controller_name' => [self::createMakerTest()
+        yield 'generates_form_login_with_custom_controller_name' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 self::makeUser($runner);
 
@@ -100,7 +100,7 @@ class MakeFormLoginTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'generates_form_login_using_defaults_with_test' => [self::createMakerTest()
+        yield 'generates_form_login_using_defaults_with_test' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 // Make the UserPasswordHasherInterface available in the test
                 $runner->renderTemplateFile('security/make-form-login/FixtureController.php', 'src/Controller/FixtureController.php', []);

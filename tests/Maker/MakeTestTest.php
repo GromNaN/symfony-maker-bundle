@@ -12,11 +12,11 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
 use Symfony\Bundle\MakerBundle\Maker\MakeTest;
-use Symfony\Bundle\MakerBundle\Test\AbstractMakerTestCase;
+use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 
-class MakeTestTest extends AbstractMakerTestCase
+class MakeTestTest extends MakerTestCase
 {
     protected function getMakerClass(): string
     {
@@ -25,7 +25,7 @@ class MakeTestTest extends AbstractMakerTestCase
 
     public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_TestCase_type' => [self::createMakerTest()
+        yield 'it_makes_TestCase_type' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -40,7 +40,7 @@ class MakeTestTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_KernelTestCase_type' => [self::createMakerTest()
+        yield 'it_makes_KernelTestCase_type' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-test/basic_setup',
@@ -60,7 +60,7 @@ class MakeTestTest extends AbstractMakerTestCase
             }),
         ];
 
-        yield 'it_makes_WebTestCase_type' => [self::createMakerTest()
+        yield 'it_makes_WebTestCase_type' => [self::newMakerTest()
             ->run(function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-test/basic_setup',
@@ -107,7 +107,7 @@ class MakeTestTest extends AbstractMakerTestCase
 
     protected static function getPantherTest(): MakerTestDetails
     {
-        return self::createMakerTest()
+        return self::newMakerTest()
             ->skipTest(
                 message: 'Panther test skipped - MAKER_SKIP_PANTHER_TEST set to TRUE.',
                 skipped: getenv('MAKER_SKIP_PANTHER_TEST')

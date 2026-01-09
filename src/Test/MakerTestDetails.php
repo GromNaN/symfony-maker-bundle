@@ -124,10 +124,6 @@ final class MakerTestDetails
      */
     public function setMaker(MakerInterface $maker): void
     {
-        if ($this->maker) {
-            throw new \LogicException('The maker has already been set and cannot be changed.');
-        }
-
         $this->maker = $maker;
     }
 
