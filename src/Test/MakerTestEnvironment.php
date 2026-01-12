@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Test;
 
+use Composer\InstalledVersions;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\InputStream;
 
@@ -28,7 +29,8 @@ final class MakerTestEnvironment
     public const GENERATED_FILES_REGEX = '#(?:created|updated):\s(?:.*\\\\)*(.*\.[a-z]{3,4}).*(?:\\\\n)?#ui';
 
     private Filesystem $fs;
-    private bool|string $rootPath;
+    private string $packageName;
+    private string $rootPath;
     private string $cachePath;
     private string $flexPath;
     private string $path;
@@ -41,7 +43,9 @@ final class MakerTestEnvironment
         $this->isWindows = str_contains(strtolower(\PHP_OS), 'win');
 
         $this->fs = new Filesystem();
-        $this->rootPath = realpath(__DIR__.'/../../');
+        $composerPackage = InstalledVersions::getRootPackage();
+        $this->packageName = $composerPackage['name'];
+        $this->rootPath = realpath($composerPackage['install_path']);
         $cachePath = $this->rootPath.'/tests/tmp/cache';
 
         if (!$this->fs->exists($cachePath)) {
@@ -134,7 +138,7 @@ final class MakerTestEnvironment
     {
         // Copy MakerBundle to a "repo" directory for tests
         if (!file_exists($makerRepoPath = \sprintf('%s/maker-repo', $this->cachePath))) {
-            MakerTestProcess::create(\sprintf('git clone %s %s', $this->rootPath, $makerRepoPath), $this->cachePath)->run();
+            MakerTestProcess::create(['git', 'clone', $this->rootPath, $makerRepoPath], $this->cachePath)->run();
         }
 
         if (!$this->fs->exists($this->flexPath)) {
@@ -144,15 +148,7 @@ final class MakerTestEnvironment
         if (!$this->fs->exists($this->path)) {
             try {
                 // let's do some magic here git is faster than copy
-                MakerTestProcess::create(
-                    '\\' === \DIRECTORY_SEPARATOR ? 'git clone %FLEX_PATH% %APP_PATH%' : 'git clone "$FLEX_PATH" "$APP_PATH"',
-                    \dirname($this->flexPath),
-                    [
-                        'FLEX_PATH' => $this->flexPath,
-                        'APP_PATH' => $this->path,
-                    ]
-                )
-                    ->run();
+                MakerTestProcess::create(['git', 'clone', $this->flexPath, $this->path], \dirname($this->flexPath))->run();
 
                 // In Window's we have to require MakerBundle in each project - git clone doesn't symlink well
                 if ($this->isWindows) {
@@ -190,7 +186,7 @@ final class MakerTestEnvironment
         }
     }
 
-    public function runCommand(string $command): MakerTestProcess
+    public function runCommand(string|array $command): MakerTestProcess
     {
         return MakerTestProcess::create($command, $this->path)->run();
     }
@@ -230,7 +226,7 @@ final class MakerTestEnvironment
 
     public function runTwigCSLint(string $file): MakerTestProcess
     {
-        if (!file_exists(__DIR__.'/../../tools/twigcs/vendor/bin/twigcs')) {
+        if (!file_exists($this->rootPath.'/tools/twigcs/vendor/bin/twigcs')) {
             throw new \Exception('twigcs not found: run: "composer upgrade -W --working-dir=tools/twigcs".');
         }
 
@@ -243,20 +239,20 @@ final class MakerTestEnvironment
         $targetVersion = $this->getTargetSkeletonVersion();
         $versionString = $targetVersion ? \sprintf(':%s', $targetVersion) : '';
 
-        $flexProjectDir = \sprintf('flex_project%s', $targetVersion);
+        $flexProjectDir = \sprintf('%s/flex_project%s', $this->cachePath, $targetVersion);
 
         MakerTestProcess::create(
             \sprintf('composer create-project symfony/skeleton%s %s --prefer-dist --no-progress --keep-vcs', $versionString, $flexProjectDir),
             $this->cachePath
         )->run();
 
-        $rootPath = str_replace('\\', '\\\\', realpath(__DIR__.'/../..'));
+        $rootPath = str_replace('\\', '\\\\', $this->rootPath);
 
-        $this->addMakerBundleRepoToComposer(\sprintf('%s/%s/composer.json', $this->cachePath, $flexProjectDir));
+        $this->addMakerBundleRepoToComposer($flexProjectDir);
 
         // In Linux, git plays well with symlinks - we can add maker to the flex skeleton.
         if (!$this->isWindows) {
-            $this->composerRequireMakerBundle(\sprintf('%s/%s', $this->cachePath, $flexProjectDir));
+            $this->composerRequireMakerBundle($flexProjectDir);
         }
 
         // fetch a few packages needed for testing
@@ -411,9 +407,7 @@ echo json_encode($missingDependencies);
 
     private function composerRequireMakerBundle(string $projectDirectory): void
     {
-        MakerTestProcess::create('composer require --dev symfony/maker-bundle', $projectDirectory)
-            ->run()
-        ;
+        MakerTestProcess::create(['composer', 'require', '--dev', $this->packageName], $projectDirectory)->run();
 
         $makerRepoSrcPath = \sprintf('%s/maker-repo/src', $this->cachePath);
 
@@ -425,26 +419,20 @@ echo json_encode($missingDependencies);
     }
 
     /**
-     * Adds Symfony/MakerBundle as a "path" repository to composer.json.
+     * Adds symfony/maker-bundle as a "path" repository to composer.json.
      */
-    private function addMakerBundleRepoToComposer(string $composerJsonPath): void
+    private function addMakerBundleRepoToComposer(string $projectDirectory): void
     {
-        $composerJson = json_decode(
-            file_get_contents($composerJsonPath), true, 512, \JSON_THROW_ON_ERROR);
-
-        // Require-dev is empty and composer complains about this being an array when we encode it again.
-        unset($composerJson['require-dev']);
-
-        $composerJson['repositories']['symfony/maker-bundle'] = [
+        $repo = [
             'type' => 'path',
             'url' => \sprintf('%s%smaker-repo', $this->cachePath, \DIRECTORY_SEPARATOR),
             'options' => [
                 'versions' => [
-                    'symfony/maker-bundle' => '9999.99', // Arbitrary version to avoid stability conflicts
+                    $this->packageName => '9999.99', // Arbitrary version to avoid stability conflicts
                 ],
             ],
         ];
 
-        file_put_contents($composerJsonPath, json_encode($composerJson, \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
+        MakerTestProcess::create(['composer', 'repo', 'add', $this->packageName, json_encode($repo)], $projectDirectory)->run();
     }
 }
