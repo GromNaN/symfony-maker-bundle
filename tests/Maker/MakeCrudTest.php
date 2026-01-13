@@ -87,6 +87,28 @@ class MakeCrudTest extends MakerTestCase
             }),
         ];
 
+        yield 'it_generates_correct_class_methods' => [self::buildMakerTest()
+            ->addExtraDependencies('symfony/test-pack')
+            ->run(function (MakerTestRunner $runner) {
+                $runner->copy(
+                    'make-crud/Foo.php',
+                    'src/Entity/Foo.php'
+                );
+
+                $output = $runner->runMaker([
+                    'Foo', // Entity Class Name
+                    '',    // Default Controller,
+                    'y',   // Generate Tests
+                ]);
+
+                self::assertStringContainsString('src/Controller/FooController.php', $output);
+                self::assertStringContainsString('src/Form/FooType.php', $output);
+                self::assertStringContainsString('tests/Controller/FooControllerTest.php', $output);
+
+                self::runCrudTest($runner, 'it_generates_correct_class_methods.php');
+            }),
+        ];
+
         yield 'it_generates_crud_custom_repository_with_test' => [self::buildMakerTest()
             ->addExtraDependencies('symfony/test-pack')
             ->run(function (MakerTestRunner $runner) {
