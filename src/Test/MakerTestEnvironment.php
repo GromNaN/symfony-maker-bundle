@@ -186,6 +186,9 @@ final class MakerTestEnvironment
         }
     }
 
+    /**
+     * @param string|list<string> $command
+     */
     public function runCommand(string|array $command): MakerTestProcess
     {
         return MakerTestProcess::create($command, $this->path)->run();
