@@ -39,11 +39,11 @@ abstract class MakerTestCase extends TestCase
     abstract protected function getMakerClass(): string;
 
     /**
-     * @deprecated Since 1.66.0, use static::newMakerTest() instead
+     * @deprecated Since 1.66.0, use static::buildMakerTest() instead
      */
     protected function createMakerTest(): MakerTestDetails
     {
-        trigger_deprecation('symfony/maker-bundle', '1.66.0', 'The "%s()" method is deprecated. Use "self::newMakerTest()" instead.', __METHOD__, self::class);
+        trigger_deprecation('symfony/maker-bundle', '1.66.0', 'The "%s()" method is deprecated. Use "self::buildMakerTest()" instead.', __METHOD__, self::class);
 
         return new MakerTestDetails($this->getMakerInstance($this->getMakerClass()));
     }
@@ -100,9 +100,13 @@ abstract class MakerTestCase extends TestCase
 
     /**
      * @return void
+     *
+     * @deprecated since 1.66.0
      */
-    protected static function assertContainsCount(string $needle, string $haystack, int $count)
+    protected function assertContainsCount(string $needle, string $haystack, int $count)
     {
+        trigger_deprecation('symfony/maker-bundle', '1.66.0', 'The "%s()" method is deprecated.', __METHOD__, TestCase::class);
+
         self::assertEquals(1, substr_count($haystack, $needle), \sprintf('Found more than %d occurrences of "%s" in "%s"', $count, $needle, $haystack));
     }
 
