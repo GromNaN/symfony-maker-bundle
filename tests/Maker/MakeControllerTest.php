@@ -36,7 +36,7 @@ class MakeControllerTest extends MakerTestCase
                     'FooBar',
                 ]);
 
-                self::assertContainsCount('created: ', $output, 1);
+                self::assertSubstrCount('created: ', $output, 1);
                 self::runControllerTest($runner, 'it_generates_a_controller.php');
 
                 // Ensure the generated controller matches what we expect
@@ -69,7 +69,7 @@ class MakeControllerTest extends MakerTestCase
             ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([], 'FooBar');
 
-                self::assertContainsCount('created: ', $output, 1);
+                self::assertSubstrCount('created: ', $output, 1);
 
                 self::assertFileExists($runner->getPath('src/Controller/FooBarController.php'));
 
@@ -138,7 +138,7 @@ class MakeControllerTest extends MakerTestCase
                 ], '--no-template');
 
                 // make sure the template was not configured
-                self::assertContainsCount('created: ', $output, 1);
+                self::assertSubstrCount('created: ', $output, 1);
                 self::assertStringContainsString('src/Controller/FooNoTemplateController.php', $output);
                 self::assertStringNotContainsString('templates/foo_no_template/index.html.twig', $output);
             }),
@@ -248,6 +248,11 @@ class MakeControllerTest extends MakerTestCase
                 self::assertStringContainsString('templates/admin/foo_invokable.html.twig', $output);
             }),
         ];
+    }
+
+    private static function assertSubstrCount(string $needle, string $haystack, int $count): void
+    {
+        self::assertEquals(1, substr_count($haystack, $needle), \sprintf('Found more than %d occurrences of "%s" in "%s"', $count, $needle, $haystack));
     }
 
     private static function runControllerTest(MakerTestRunner $runner, string $filename): void
