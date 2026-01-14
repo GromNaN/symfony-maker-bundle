@@ -22,6 +22,9 @@ final class MakerTestProcess
 {
     private Process $process;
 
+    /**
+     * @param string|list<string> $commandLine
+     */
     private function __construct(string|array $commandLine, string $cwd, array $envVars, ?float $timeout)
     {
         $this->process = \is_string($commandLine)
@@ -31,6 +34,9 @@ final class MakerTestProcess
         $this->process->setEnv($envVars);
     }
 
+    /**
+     * @param string|list<string> $commandLine
+     */
     public static function create(string|array $commandLine, string $cwd, array $envVars = [], ?float $timeout = null): self
     {
         return new self($commandLine, $cwd, $envVars, $timeout);
