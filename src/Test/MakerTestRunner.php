@@ -11,7 +11,6 @@
 
 namespace Symfony\Bundle\MakerBundle\Test;
 
-use Composer\InstalledVersions;
 use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Bundle\MakerBundle\Util\ClassSourceManipulator;
 use Symfony\Bundle\MakerBundle\Util\YamlSourceManipulator;
@@ -53,7 +52,7 @@ class MakerTestRunner
      */
     public function copy(string $source, string $destination)
     {
-        $path = self::getFixturesDir().$source;
+        $path = $this->environment->getFixturesPath($source);
 
         if (!file_exists($path)) {
             throw new \Exception(\sprintf('Cannot find file "%s"', $path));
@@ -77,7 +76,7 @@ class MakerTestRunner
     public function renderTemplateFile(string $source, string $destination, array $variables): void
     {
         $twig = new Environment(
-            new FilesystemLoader(self::getFixturesDir())
+            new FilesystemLoader($this->environment->getFixturesPath())
         );
 
         $rendered = $twig->render($source, $variables);
@@ -272,10 +271,5 @@ class MakerTestRunner
     public function doesClassExist(string $class): bool
     {
         return $this->environment->doesClassExistInApp($class);
-    }
-
-    private static function getFixturesDir(): string
-    {
-        return realpath(InstalledVersions::getRootPackage()['install_path']).'/tests/fixtures/';
     }
 }

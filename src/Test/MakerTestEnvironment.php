@@ -33,6 +33,7 @@ final class MakerTestEnvironment
     private string $rootPath;
     private string $cachePath;
     private string $flexPath;
+    private string $fixturesPath;
     private string $path;
     private MakerTestProcess $runnedMakerProcess;
     private bool $isWindows;
@@ -55,6 +56,7 @@ final class MakerTestEnvironment
         $this->cachePath = realpath($cachePath);
         $targetVersion = $this->getTargetSkeletonVersion();
         $this->flexPath = $this->cachePath.'/flex_project'.$targetVersion;
+        $this->fixturesPath = $this->rootPath.'/tests/fixtures/';
 
         $directoryName = $targetVersion ?: 'current';
         if (str_ends_with($directoryName, '.*')) {
@@ -67,6 +69,11 @@ final class MakerTestEnvironment
     public static function create(MakerTestDetails $testDetails): self
     {
         return new self($testDetails);
+    }
+
+    public function getFixturesPath(string $path = ''): string
+    {
+        return $this->fixturesPath.$path;
     }
 
     public function getPath(): string
