@@ -25,9 +25,9 @@ class MakeEntityTest extends MakerTestCase
         return MakeEntity::class;
     }
 
-    private function createMakeEntityTest(bool $withDatabase = true): MakerTestDetails
+    private static function createMakeEntityTest(bool $withDatabase = true): MakerTestDetails
     {
-        return $this->createMakerTest()
+        return self::buildMakerTest()
             ->preRun(static function (MakerTestRunner $runner) use ($withDatabase) {
                 if ($withDatabase) {
                     $runner->configureDatabase();
@@ -35,16 +35,16 @@ class MakeEntityTest extends MakerTestCase
             });
     }
 
-    private function createMakeEntityTestForMercure(): MakerTestDetails
+    private static function createMakeEntityTestForMercure(): MakerTestDetails
     {
         if (getenv('MAKER_SKIP_MERCURE_TEST')) {
             // This test is skipped, don't worry about persistence
-            return $this->createMakerTest()
+            return self::buildMakerTest()
                 ->skipTest('MAKER_SKIP_MERCURE_TEST set to true')
             ;
         }
 
-        return $this->createMakeEntityTest()
+        return self::createMakeEntityTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 // installed manually later so that the compatibility check can run first
                 $runner->runProcess('composer require symfony/ux-turbo');
@@ -53,10 +53,10 @@ class MakeEntityTest extends MakerTestCase
         ;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_creates_a_new_class_basic' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_creates_a_new_class_basic' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // entity class name
                     'User',
@@ -64,11 +64,11 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_only_shows_supported_types' => [$this->createMakeEntityTest()
+        yield 'it_only_shows_supported_types' => [self::createMakeEntityTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     // entity class name
@@ -102,8 +102,8 @@ class MakeEntityTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_does_not_validate_entity_name_with_accent' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_does_not_validate_entity_name_with_accent' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // entity class with accent
                     'Usé',
@@ -115,13 +115,13 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_creates_a_new_class_and_api_resource' => [$this->createMakeEntityTest()
+        yield 'it_creates_a_new_class_and_api_resource' => [self::createMakeEntityTest()
             ->addExtraDependencies('api')
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // entity class name
                     'User',
@@ -131,19 +131,19 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->assertFileExists($runner->getPath('src/Entity/User.php'));
+                self::assertFileExists($runner->getPath('src/Entity/User.php'));
 
                 $content = file_get_contents($runner->getPath('src/Entity/User.php'));
-                $this->assertStringContainsString('use ApiPlatform\Metadata\ApiResource;', $content);
-                $this->assertStringContainsString('#[ApiResource]', $content);
+                self::assertStringContainsString('use ApiPlatform\Metadata\ApiResource;', $content);
+                self::assertStringContainsString('#[ApiResource]', $content);
 
-                $this->runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_creates_a_new_class_with_uuid' => [$this->createMakeEntityTest()
+        yield 'it_creates_a_new_class_with_uuid' => [self::createMakeEntityTest()
             ->addExtraDependencies('symfony/uid')
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // entity class name
                     'User',
@@ -151,19 +151,19 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ], '--with-uuid');
 
-                $this->assertFileExists($runner->getPath('src/Entity/User.php'));
+                self::assertFileExists($runner->getPath('src/Entity/User.php'));
 
                 $content = file_get_contents($runner->getPath('src/Entity/User.php'));
-                $this->assertStringContainsString('use Symfony\Component\Uid\Uuid;', $content);
-                $this->assertStringContainsString('[ORM\CustomIdGenerator(class: \'doctrine.uuid_generator\')]', $content);
+                self::assertStringContainsString('use Symfony\Component\Uid\Uuid;', $content);
+                self::assertStringContainsString('[ORM\CustomIdGenerator(class: \'doctrine.uuid_generator\')]', $content);
 
-                $this->runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_creates_a_new_class_with_ulid' => [$this->createMakeEntityTest()
+        yield 'it_creates_a_new_class_with_ulid' => [self::createMakeEntityTest()
             ->addExtraDependencies('symfony/uid')
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // entity class name
                     'User',
@@ -171,18 +171,18 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ], '--with-ulid');
 
-                $this->assertFileExists($runner->getPath('src/Entity/User.php'));
+                self::assertFileExists($runner->getPath('src/Entity/User.php'));
 
                 $content = file_get_contents($runner->getPath('src/Entity/User.php'));
-                $this->assertStringContainsString('use Symfony\Component\Uid\Ulid;', $content);
-                $this->assertStringContainsString('[ORM\CustomIdGenerator(class: \'doctrine.ulid_generator\')]', $content);
+                self::assertStringContainsString('use Symfony\Component\Uid\Ulid;', $content);
+                self::assertStringContainsString('[ORM\CustomIdGenerator(class: \'doctrine.ulid_generator\')]', $content);
 
-                $this->runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_creates_a_new_class_with_fields' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_creates_a_new_class_with_fields' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // entity class name
                     'User',
@@ -201,13 +201,13 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_updates_existing_entity' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
+        yield 'it_updates_existing_entity' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -222,7 +222,7 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runEntityTest($runner, [
+                self::runEntityTest($runner, [
                     // existing field
                     'firstName' => 'Mr. Chocolate',
                     // new field
@@ -231,9 +231,9 @@ class MakeEntityTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_updates_entity_many_to_one_no_inverse' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
+        yield 'it_updates_entity_many_to_one_no_inverse' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -254,13 +254,13 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runCustomTest($runner, 'it_updates_entity_many_to_one_no_inverse.php');
+                self::runCustomTest($runner, 'it_updates_entity_many_to_one_no_inverse.php');
             }),
         ];
 
-        yield 'it_adds_many_to_one_self_referencing' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
+        yield 'it_adds_many_to_one_self_referencing' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -285,13 +285,13 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runCustomTest($runner, 'it_adds_many_to_one_self_referencing.php');
+                self::runCustomTest($runner, 'it_adds_many_to_one_self_referencing.php');
             }),
         ];
 
-        yield 'it_adds_one_to_many_simple' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'UserAvatarPhoto-basic.php');
+        yield 'it_adds_one_to_many_simple' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'UserAvatarPhoto-basic.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -314,13 +314,13 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runCustomTest($runner, 'it_adds_one_to_many_simple.php');
+                self::runCustomTest($runner, 'it_adds_one_to_many_simple.php');
             }),
         ];
 
-        yield 'it_adds_many_to_many_simple' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
+        yield 'it_adds_many_to_many_simple' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -341,14 +341,14 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runCustomTest($runner, 'it_adds_many_to_many_simple.php');
+                self::runCustomTest($runner, 'it_adds_many_to_many_simple.php');
             }),
         ];
 
-        yield 'it_adds_many_to_many_with_custom_root_namespace' => [$this->createMakeEntityTest()
+        yield 'it_adds_many_to_many_with_custom_root_namespace' => [self::createMakeEntityTest()
             ->changeRootNamespace('Custom')
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-custom-namespace.php');
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-custom-namespace.php');
 
                 $runner->writeFile(
                     'config/packages/dev/maker.yaml',
@@ -374,14 +374,14 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runCustomTest($runner, 'it_adds_many_to_many_with_custom_root_namespace.php');
+                self::runCustomTest($runner, 'it_adds_many_to_many_with_custom_root_namespace.php');
             }),
         ];
 
-        yield 'it_adds_many_to_many_between_same_entity_name_different_namespace' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
-                $this->copyEntity($runner, 'Friend/User-sub-namespace.php');
+        yield 'it_adds_many_to_many_between_same_entity_name_different_namespace' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
+                self::copyEntity($runner, 'Friend/User-sub-namespace.php');
 
                 $output = $runner->runMaker([
                     // entity class name
@@ -402,24 +402,24 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->assertStringContainsString('src/Entity/User.php', $output);
-                $this->assertStringContainsString('src/Entity/Friend/User.php', $output);
-                $this->assertStringContainsString('ManyToOne    Each User relates to (has) one Friend\User.', $output);
-                $this->assertStringContainsString('Each Friend\User can relate to (can have) many User objects.', $output);
-                $this->assertStringContainsString('OneToMany    Each User can relate to (can have) many Friend\User objects.', $output);
-                $this->assertStringContainsString('Each Friend\User relates to (has) one User.', $output);
-                $this->assertStringContainsString('ManyToMany   Each User can relate to (can have) many Friend\User objects.', $output);
-                $this->assertStringContainsString('Each Friend\User can also relate to (can also have) many User objects.', $output);
-                $this->assertStringContainsString('OneToOne     Each User relates to (has) exactly one Friend\User.', $output);
-                $this->assertStringContainsString('Each Friend\User also relates to (has) exactly one User.', $output);
+                self::assertStringContainsString('src/Entity/User.php', $output);
+                self::assertStringContainsString('src/Entity/Friend/User.php', $output);
+                self::assertStringContainsString('ManyToOne    Each User relates to (has) one Friend\User.', $output);
+                self::assertStringContainsString('Each Friend\User can relate to (can have) many User objects.', $output);
+                self::assertStringContainsString('OneToMany    Each User can relate to (can have) many Friend\User objects.', $output);
+                self::assertStringContainsString('Each Friend\User relates to (has) one User.', $output);
+                self::assertStringContainsString('ManyToMany   Each User can relate to (can have) many Friend\User objects.', $output);
+                self::assertStringContainsString('Each Friend\User can also relate to (can also have) many User objects.', $output);
+                self::assertStringContainsString('OneToOne     Each User relates to (has) exactly one Friend\User.', $output);
+                self::assertStringContainsString('Each Friend\User also relates to (has) exactly one User.', $output);
 
-                // $this->runCustomTest($runner, 'it_adds_many_to_many_between_same_entity_name_different_namespace.php');
+                // self::runCustomTest($runner, 'it_adds_many_to_many_between_same_entity_name_different_namespace.php');
             }),
         ];
 
-        yield 'it_adds_one_to_one_simple' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
+        yield 'it_adds_one_to_one_simple' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -442,14 +442,14 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runCustomTest($runner, 'it_adds_one_to_one_simple.php');
+                self::runCustomTest($runner, 'it_adds_one_to_one_simple.php');
             }),
         ];
 
-        yield 'it_adds_many_to_one_to_vendor_target' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
-                $this->setupGroupEntityInVendor($runner);
+        yield 'it_adds_many_to_one_to_vendor_target' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
+                self::setupGroupEntityInVendor($runner);
 
                 $output = $runner->runMaker([
                     // entity class name
@@ -470,22 +470,22 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->assertStringContainsString('src/Entity/User.php', $output);
-                $this->assertStringNotContainsString('updated: vendor/', $output);
+                self::assertStringContainsString('src/Entity/User.php', $output);
+                self::assertStringNotContainsString('updated: vendor/', $output);
 
                 // sanity checks on the generated code
                 $finder = new Finder();
                 $finder->in($runner->getPath('src/Entity'))->files()->name('*.php');
-                $this->assertCount(1, $finder);
+                self::assertCount(1, $finder);
 
-                $this->assertStringNotContainsString('inversedBy', file_get_contents($runner->getPath('src/Entity/User.php')));
+                self::assertStringNotContainsString('inversedBy', file_get_contents($runner->getPath('src/Entity/User.php')));
             }),
         ];
 
-        yield 'it_adds_many_to_many_to_vendor_target' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
-                $this->setupGroupEntityInVendor($runner);
+        yield 'it_adds_many_to_many_to_vendor_target' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
+                self::setupGroupEntityInVendor($runner);
 
                 $output = $runner->runMaker([
                     // entity class name
@@ -504,16 +504,16 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->assertStringNotContainsString('updated: vendor/', $output);
+                self::assertStringNotContainsString('updated: vendor/', $output);
 
-                $this->assertStringNotContainsString('inversedBy', file_get_contents($runner->getPath('src/Entity/User.php')));
+                self::assertStringNotContainsString('inversedBy', file_get_contents($runner->getPath('src/Entity/User.php')));
             }),
         ];
 
-        yield 'it_adds_one_to_one_to_vendor_target' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
-                $this->setupGroupEntityInVendor($runner);
+        yield 'it_adds_one_to_one_to_vendor_target' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
+                self::setupGroupEntityInVendor($runner);
 
                 $output = $runner->runMaker([
                     // entity class name
@@ -534,67 +534,67 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->assertStringNotContainsString('updated: vendor/', $output);
+                self::assertStringNotContainsString('updated: vendor/', $output);
 
-                $this->assertStringNotContainsString('inversedBy', file_get_contents($runner->getPath('src/Entity/User.php')));
+                self::assertStringNotContainsString('inversedBy', file_get_contents($runner->getPath('src/Entity/User.php')));
             }),
         ];
 
-        yield 'it_regenerates_entities' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntityDirectory($runner, 'regenerate');
+        yield 'it_regenerates_entities' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntityDirectory($runner, 'regenerate');
 
                 $runner->runMaker([
                     // namespace: use default App\Entity
                     '',
                 ], '--regenerate');
 
-                $this->runCustomTest($runner, 'it_regenerates_entities.php');
+                self::runCustomTest($runner, 'it_regenerates_entities.php');
             }),
         ];
 
-        yield 'it_regenerates_embedded_entities' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntityDirectory($runner, 'regenerate-embedded');
+        yield 'it_regenerates_embedded_entities' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntityDirectory($runner, 'regenerate-embedded');
 
                 $runner->runMaker([
                     // namespace: use default App\Entity
                     '',
                 ], '--regenerate');
 
-                $this->runCustomTest($runner, 'it_regenerates_embedded_entities.php');
+                self::runCustomTest($runner, 'it_regenerates_embedded_entities.php');
             }),
         ];
 
-        yield 'it_regenerates_embeddable_entity' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntityDirectory($runner, 'regenerate-embeddable');
+        yield 'it_regenerates_embeddable_entity' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntityDirectory($runner, 'regenerate-embeddable');
 
                 $runner->runMaker([
                     // namespace: use default App\Entity
                     '',
                 ], '--regenerate');
 
-                $this->runCustomTest($runner, 'it_regenerates_embeddable_entity.php');
+                self::runCustomTest($runner, 'it_regenerates_embeddable_entity.php');
             }),
         ];
 
-        yield 'it_regenerates_with_overwrite' => [$this->createMakeEntityTest(false)
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-invalid-method.php');
+        yield 'it_regenerates_with_overwrite' => [self::createMakeEntityTest(false)
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-invalid-method.php');
 
                 $runner->runMaker([
                     // namespace: use default App\Entity
                     '',
                 ], '--regenerate --overwrite');
 
-                $this->runCustomTest($runner, 'it_regenerates_with_overwrite.php', false);
+                self::runCustomTest($runner, 'it_regenerates_with_overwrite.php', false);
             }),
         ];
 
-        yield 'it_can_overwrite_while_adding_fields' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-invalid-method-no-property.php');
+        yield 'it_can_overwrite_while_adding_fields' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-invalid-method-no-property.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -610,14 +610,14 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ], '--overwrite');
 
-                $this->runCustomTest($runner, 'it_regenerates_with_overwrite.php');
+                self::runCustomTest($runner, 'it_regenerates_with_overwrite.php');
             }),
         ];
 
         // see #192
-        yield 'it_creates_class_that_matches_existing_namespace' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'User-basic.php');
+        yield 'it_creates_class_that_matches_existing_namespace' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'User-basic.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -626,13 +626,13 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runCustomTest($runner, 'it_creates_class_that_matches_existing_namespace.php');
+                self::runCustomTest($runner, 'it_creates_class_that_matches_existing_namespace.php');
             }),
         ];
 
-        yield 'it_makes_new_entity_with_mercure_broadcast' => [$this->createMakeEntityTestForMercure()
+        yield 'it_makes_new_entity_with_mercure_broadcast' => [self::createMakeEntityTestForMercure()
             // special setup done in createMakeEntityTestForMercure()
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->replaceInFile(
                     '.env',
                     'https://example.com/.well-known/mercure',
@@ -648,20 +648,20 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->assertFileExists($runner->getPath('src/Entity/User.php'));
+                self::assertFileExists($runner->getPath('src/Entity/User.php'));
 
                 $content = file_get_contents($runner->getPath('src/Entity/User.php'));
-                $this->assertStringContainsString('use Symfony\UX\Turbo\Attribute\Broadcast;', $content);
-                $this->assertStringContainsString('#[Broadcast]', $content);
+                self::assertStringContainsString('use Symfony\UX\Turbo\Attribute\Broadcast;', $content);
+                self::assertStringContainsString('#[Broadcast]', $content);
 
-                $this->runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_makes_new_entity_no_to_all_extras' => [$this->createMakeEntityTestForMercure()
+        yield 'it_makes_new_entity_no_to_all_extras' => [self::createMakeEntityTestForMercure()
             ->addExtraDependencies('api')
             // special setup done in createMakeEntityTestForMercure()
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     // entity class name
                     'User',
@@ -673,30 +673,30 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->assertFileExists($runner->getPath('src/Entity/User.php'));
-                $this->runEntityTest($runner);
+                self::assertFileExists($runner->getPath('src/Entity/User.php'));
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_generates_entity_with_turbo_without_mercure' => [$this->createMakeEntityTest()
+        yield 'it_generates_entity_with_turbo_without_mercure' => [self::createMakeEntityTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->runProcess('composer require symfony/ux-turbo');
             })
             ->addExtraDependencies('twig')
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     'User', // entity class
                     'n', // no broadcast
                     '',
                 ]);
 
-                $this->assertFileExists($runner->getPath('src/Entity/User.php'));
+                self::assertFileExists($runner->getPath('src/Entity/User.php'));
             }),
         ];
 
-        yield 'it_creates_a_new_class_with_enum_field' => [$this->createMakeEntityTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->copyEntity($runner, 'Enum/Role-basic.php');
+        yield 'it_creates_a_new_class_with_enum_field' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::copyEntity($runner, 'Enum/Role-basic.php');
 
                 $runner->runMaker([
                     // entity class name
@@ -712,13 +712,13 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                $this->runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
-        yield 'it_creates_a_new_class_with_enum_field_multiple_and_nullable' => [$this->createMakeEntityTest()
-        ->run(function (MakerTestRunner $runner) {
-            $this->copyEntity($runner, 'Enum/Role-basic.php');
+        yield 'it_creates_a_new_class_with_enum_field_multiple_and_nullable' => [self::createMakeEntityTest()
+        ->run(static function (MakerTestRunner $runner) {
+            self::copyEntity($runner, 'Enum/Role-basic.php');
 
             $runner->runMaker([
                 // entity class name
@@ -735,13 +735,13 @@ class MakeEntityTest extends MakerTestCase
                 '',
             ]);
 
-            $this->runEntityTest($runner);
+            self::runEntityTest($runner);
         }),
         ];
     }
 
     /** @param array<string, mixed> $data */
-    private function runEntityTest(MakerTestRunner $runner, array $data = []): void
+    private static function runEntityTest(MakerTestRunner $runner, array $data = []): void
     {
         $runner->renderTemplateFile(
             'make-entity/GeneratedEntityTest.php.twig',
@@ -755,7 +755,7 @@ class MakeEntityTest extends MakerTestCase
         $runner->runTests();
     }
 
-    private function runCustomTest(MakerTestRunner $runner, string $filename, bool $withDatabase = true): void
+    private static function runCustomTest(MakerTestRunner $runner, string $filename, bool $withDatabase = true): void
     {
         $runner->copy(
             'make-entity/tests/'.$filename,
@@ -768,7 +768,7 @@ class MakeEntityTest extends MakerTestCase
         $runner->runTests();
     }
 
-    private function setupGroupEntityInVendor(MakerTestRunner $runner): void
+    private static function setupGroupEntityInVendor(MakerTestRunner $runner): void
     {
         $runner->copy(
             'make-entity/Group-vendor.php',
@@ -781,7 +781,7 @@ class MakeEntityTest extends MakerTestCase
         );
     }
 
-    private function copyEntity(MakerTestRunner $runner, string $filename): void
+    private static function copyEntity(MakerTestRunner $runner, string $filename): void
     {
         $entityClassName = substr(
             $filename,
@@ -795,7 +795,7 @@ class MakeEntityTest extends MakerTestCase
         );
     }
 
-    private function copyEntityDirectory(MakerTestRunner $runner, string $directory): void
+    private static function copyEntityDirectory(MakerTestRunner $runner, string $directory): void
     {
         $runner->copy(
             \sprintf('make-entity/%s/attributes', $directory),

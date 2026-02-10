@@ -24,13 +24,13 @@ class MakeResetPasswordTest extends MakerTestCase
         return MakeResetPassword::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_with_normal_setup' => [$this->createMakerTest()
+        yield 'it_generates_with_normal_setup' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
-            ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+            ->run(static function (MakerTestRunner $runner) {
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'App\Entity\User',
@@ -39,7 +39,7 @@ class MakeResetPasswordTest extends MakerTestCase
                     'SymfonyCasts',
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 $generatedFiles = [
                     'src/Controller/ResetPasswordController.php',
@@ -54,17 +54,17 @@ class MakeResetPasswordTest extends MakerTestCase
                 ];
 
                 foreach ($generatedFiles as $file) {
-                    $this->assertFileExists($runner->getPath($file));
+                    self::assertFileExists($runner->getPath($file));
                 }
 
                 $configFileContents = file_get_contents($runner->getPath('config/packages/reset_password.yaml'));
 
                 // Flex recipe adds comments in reset_password.yaml, check file was replaced by maker
-                $this->assertStringNotContainsString('#', $configFileContents);
+                self::assertStringNotContainsString('#', $configFileContents);
 
                 $resetPasswordConfig = $runner->readYaml('config/packages/reset_password.yaml');
 
-                $this->assertSame('App\Repository\ResetPasswordRequestRepository', $resetPasswordConfig['symfonycasts_reset_password']['request_password_repository']);
+                self::assertSame('App\Repository\ResetPasswordRequestRepository', $resetPasswordConfig['symfonycasts_reset_password']['request_password_repository']);
 
                 $runner->writeFile(
                     'config/packages/mailer.yaml',
@@ -82,7 +82,7 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_tests' => [$this->createMakerTest()
+        yield 'it_generates_tests' => [self::buildMakerTest()
             // Needed to assertEmails && NotCompromisedPassword
             ->addExtraDependencies('symfony/mailer', 'symfony/http-client')
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
@@ -93,8 +93,8 @@ class MakeResetPasswordTest extends MakerTestCase
                     'src/Controller/FixtureController.php'
                 );
             })
-            ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+            ->run(static function (MakerTestRunner $runner) {
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'app_home',
@@ -103,14 +103,14 @@ class MakeResetPasswordTest extends MakerTestCase
                     'y',
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 $generatedFiles = [
                     'tests/ResetPasswordControllerTest.php',
                 ];
 
                 foreach ($generatedFiles as $file) {
-                    $this->assertFileExists($runner->getPath($file));
+                    self::assertFileExists($runner->getPath($file));
                 }
 
                 $runner->writeFile(
@@ -130,11 +130,11 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_uuid' => [$this->createMakerTest()
+        yield 'it_generates_with_uuid' => [self::buildMakerTest()
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/uid')
-            ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+            ->run(static function (MakerTestRunner $runner) {
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'App\Entity\User',
@@ -143,7 +143,7 @@ class MakeResetPasswordTest extends MakerTestCase
                     'SymfonyCasts',
                 ], '--with-uuid');
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 $generatedFiles = [
                     'src/Controller/ResetPasswordController.php',
@@ -158,21 +158,21 @@ class MakeResetPasswordTest extends MakerTestCase
                 ];
 
                 foreach ($generatedFiles as $file) {
-                    $this->assertFileExists($runner->getPath($file));
+                    self::assertFileExists($runner->getPath($file));
                 }
 
                 $resetPasswordRequestEntityContents = file_get_contents($runner->getPath('src/Entity/ResetPasswordRequest.php'));
-                $this->assertStringContainsString('use Symfony\Component\Uid\Uuid;', $resetPasswordRequestEntityContents);
-                $this->assertStringContainsString('[ORM\CustomIdGenerator(class: \'doctrine.uuid_generator\')]', $resetPasswordRequestEntityContents);
+                self::assertStringContainsString('use Symfony\Component\Uid\Uuid;', $resetPasswordRequestEntityContents);
+                self::assertStringContainsString('[ORM\CustomIdGenerator(class: \'doctrine.uuid_generator\')]', $resetPasswordRequestEntityContents);
 
                 $configFileContents = file_get_contents($runner->getPath('config/packages/reset_password.yaml'));
 
                 // Flex recipe adds comments in reset_password.yaml, check file was replaced by maker
-                $this->assertStringNotContainsString('#', $configFileContents);
+                self::assertStringNotContainsString('#', $configFileContents);
 
                 $resetPasswordConfig = $runner->readYaml('config/packages/reset_password.yaml');
 
-                $this->assertSame('App\Repository\ResetPasswordRequestRepository', $resetPasswordConfig['symfonycasts_reset_password']['request_password_repository']);
+                self::assertSame('App\Repository\ResetPasswordRequestRepository', $resetPasswordConfig['symfonycasts_reset_password']['request_password_repository']);
 
                 $runner->writeFile(
                     'config/packages/mailer.yaml',
@@ -190,11 +190,11 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_ulid' => [$this->createMakerTest()
+        yield 'it_generates_with_ulid' => [self::buildMakerTest()
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/uid')
-            ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+            ->run(static function (MakerTestRunner $runner) {
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'App\Entity\User',
@@ -203,7 +203,7 @@ class MakeResetPasswordTest extends MakerTestCase
                     'SymfonyCasts',
                 ], '--with-ulid');
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 $generatedFiles = [
                     'src/Controller/ResetPasswordController.php',
@@ -218,21 +218,21 @@ class MakeResetPasswordTest extends MakerTestCase
                 ];
 
                 foreach ($generatedFiles as $file) {
-                    $this->assertFileExists($runner->getPath($file));
+                    self::assertFileExists($runner->getPath($file));
                 }
 
                 $resetPasswordRequestEntityContents = file_get_contents($runner->getPath('src/Entity/ResetPasswordRequest.php'));
-                $this->assertStringContainsString('use Symfony\Component\Uid\Ulid;', $resetPasswordRequestEntityContents);
-                $this->assertStringContainsString('[ORM\CustomIdGenerator(class: \'doctrine.ulid_generator\')]', $resetPasswordRequestEntityContents);
+                self::assertStringContainsString('use Symfony\Component\Uid\Ulid;', $resetPasswordRequestEntityContents);
+                self::assertStringContainsString('[ORM\CustomIdGenerator(class: \'doctrine.ulid_generator\')]', $resetPasswordRequestEntityContents);
 
                 $configFileContents = file_get_contents($runner->getPath('config/packages/reset_password.yaml'));
 
                 // Flex recipe adds comments in reset_password.yaml, check file was replaced by maker
-                $this->assertStringNotContainsString('#', $configFileContents);
+                self::assertStringNotContainsString('#', $configFileContents);
 
                 $resetPasswordConfig = $runner->readYaml('config/packages/reset_password.yaml');
 
-                $this->assertSame('App\Repository\ResetPasswordRequestRepository', $resetPasswordConfig['symfonycasts_reset_password']['request_password_repository']);
+                self::assertSame('App\Repository\ResetPasswordRequestRepository', $resetPasswordConfig['symfonycasts_reset_password']['request_password_repository']);
 
                 $runner->writeFile(
                     'config/packages/mailer.yaml',
@@ -250,12 +250,12 @@ class MakeResetPasswordTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_with_translator_installed' => [$this->createMakerTest()
+        yield 'it_generates_with_translator_installed' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
             ->addExtraDependencies('symfony/translation')
-            ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner);
+            ->run(static function (MakerTestRunner $runner) {
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'App\Entity\User',
@@ -264,14 +264,14 @@ class MakeResetPasswordTest extends MakerTestCase
                     'SymfonyCasts',
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
             }),
         ];
 
-        yield 'it_generates_with_custom_config' => [$this->createMakerTest()
+        yield 'it_generates_with_custom_config' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->deleteFile('config/packages/reset_password.yaml');
                 $runner->writeFile(
                     'config/packages/custom_reset_password.yaml',
@@ -280,7 +280,7 @@ class MakeResetPasswordTest extends MakerTestCase
                     ]])
                 );
 
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'App\Entity\User',
@@ -289,27 +289,27 @@ class MakeResetPasswordTest extends MakerTestCase
                     'SymfonyCasts',
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
-                $this->assertFileDoesNotExist($runner->getPath('config/packages/reset_password.yaml'));
-                $this->assertStringContainsString(
+                self::assertFileDoesNotExist($runner->getPath('config/packages/reset_password.yaml'));
+                self::assertStringContainsString(
                     'Just remember to set the request_password_repository in your configuration.',
                     $output
                 );
             }),
         ];
 
-        yield 'it_amends_configuration' => [$this->createMakerTest()
+        yield 'it_amends_configuration' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->modifyYamlFile('config/packages/reset_password.yaml', static function (array $config) {
                     $config['symfonycasts_reset_password']['lifetime'] = 9999;
 
                     return $config;
                 });
 
-                $this->makeUser($runner);
+                self::makeUser($runner);
 
                 $output = $runner->runMaker([
                     'App\Entity\User',
@@ -318,20 +318,20 @@ class MakeResetPasswordTest extends MakerTestCase
                     'SymfonyCasts',
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 $resetPasswordConfig = $runner->readYaml('config/packages/reset_password.yaml');
 
-                $this->assertStringContainsString('9999', $resetPasswordConfig['symfonycasts_reset_password']['lifetime']);
-                $this->assertSame('App\Repository\ResetPasswordRequestRepository', $resetPasswordConfig['symfonycasts_reset_password']['request_password_repository']);
+                self::assertStringContainsString('9999', $resetPasswordConfig['symfonycasts_reset_password']['lifetime']);
+                self::assertSame('App\Repository\ResetPasswordRequestRepository', $resetPasswordConfig['symfonycasts_reset_password']['request_password_repository']);
             }),
         ];
 
-        yield 'it_generates_with_custom_user' => [$this->createMakerTest()
+        yield 'it_generates_with_custom_user' => [self::buildMakerTest()
             // @legacy - drop skipped versions when PHP 8.1 is no longer supported.
             ->setSkippedPhpVersions(80100, 80109)
-            ->run(function (MakerTestRunner $runner) {
-                $this->makeUser($runner, 'emailAddress', 'UserCustom', false);
+            ->run(static function (MakerTestRunner $runner) {
+                self::makeUser($runner, 'emailAddress', 'UserCustom', false);
 
                 $runner->manipulateClass('src/Entity/UserCustom.php', static function (ClassSourceManipulator $manipulator) {
                     $manipulator->addSetter('myPassword', 'string', true);
@@ -346,31 +346,31 @@ class MakeResetPasswordTest extends MakerTestCase
                     'SymfonyCasts',
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 // check ResetPasswordController
                 $contentResetPasswordController = file_get_contents($runner->getPath('src/Controller/ResetPasswordController.php'));
-                $this->assertStringContainsString('$form->get(\'emailAddress\')->getData()', $contentResetPasswordController);
-                $this->assertStringContainsString('\'emailAddress\' => $emailFormData,', $contentResetPasswordController);
-                $this->assertStringContainsString('$user->setMyPassword($passwordHasher->hashPassword($user, $plainPassword));', $contentResetPasswordController);
-                $this->assertStringContainsString('->to((string) $user->getEmailAddress())', $contentResetPasswordController);
+                self::assertStringContainsString('$form->get(\'emailAddress\')->getData()', $contentResetPasswordController);
+                self::assertStringContainsString('\'emailAddress\' => $emailFormData,', $contentResetPasswordController);
+                self::assertStringContainsString('$user->setMyPassword($passwordHasher->hashPassword($user, $plainPassword));', $contentResetPasswordController);
+                self::assertStringContainsString('->to((string) $user->getEmailAddress())', $contentResetPasswordController);
 
                 // check ResetPasswordRequest
                 $contentResetPasswordRequest = file_get_contents($runner->getPath('src/Entity/ResetPasswordRequest.php'));
 
-                $this->assertStringContainsString('ORM\ManyToOne', $contentResetPasswordRequest);
+                self::assertStringContainsString('ORM\ManyToOne', $contentResetPasswordRequest);
 
                 // check ResetPasswordRequestFormType
                 $contentResetPasswordRequestFormType = file_get_contents($runner->getPath('/src/Form/ResetPasswordRequestFormType.php'));
-                $this->assertStringContainsString('->add(\'emailAddress\', EmailType::class, [', $contentResetPasswordRequestFormType);
+                self::assertStringContainsString('->add(\'emailAddress\', EmailType::class, [', $contentResetPasswordRequestFormType);
                 // check request.html.twig
                 $contentRequestHtml = file_get_contents($runner->getPath('templates/reset_password/request.html.twig'));
-                $this->assertStringContainsString('{{ form_row(requestForm.emailAddress) }}', $contentRequestHtml);
+                self::assertStringContainsString('{{ form_row(requestForm.emailAddress) }}', $contentRequestHtml);
             }),
         ];
     }
 
-    private function makeUser(MakerTestRunner $runner, string $identifier = 'email', string $userClass = 'User', bool $checkPassword = true): void
+    private static function makeUser(MakerTestRunner $runner, string $identifier = 'email', string $userClass = 'User', bool $checkPassword = true): void
     {
         $runner->runConsole('make:user', [
             $userClass, // class name

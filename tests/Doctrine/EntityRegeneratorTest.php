@@ -14,6 +14,7 @@ namespace Symfony\Bundle\MakerBundle\Tests\Doctrine;
 use Composer\InstalledVersions;
 use Composer\Semver\VersionParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -38,6 +39,7 @@ class EntityRegeneratorTest extends TestCase
     /**
      * @dataProvider getRegenerateEntitiesTests
      */
+    #[DataProvider('getRegenerateEntitiesTests')]
     public function testRegenerateEntities(string $expectedDirName, bool $overwrite)
     {
         $kernel = new TestEntityRegeneratorKernel('dev', true);
@@ -51,7 +53,7 @@ class EntityRegeneratorTest extends TestCase
         );
     }
 
-    public function getRegenerateEntitiesTests(): \Generator
+    public static function getRegenerateEntitiesTests(): \Generator
     {
         yield 'regenerate_no_overwrite' => [
             'expected_no_overwrite',

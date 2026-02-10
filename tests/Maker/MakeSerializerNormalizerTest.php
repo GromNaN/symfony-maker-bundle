@@ -22,15 +22,15 @@ class MakeSerializerNormalizerTest extends MakerTestCase
         return MakeSerializerNormalizer::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_serializer_normalizer' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_makes_serializer_normalizer' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker(
                     ['FooBarNormalizer']
                 );
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 self::assertFileEquals(
                     \dirname(__DIR__).'/fixtures/make-serializer-normalizer/FooBarNormalizer.php',
@@ -39,15 +39,15 @@ class MakeSerializerNormalizerTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_serializer_normalizer_with_existing_entity' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_makes_serializer_normalizer_with_existing_entity' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->copy('make-serializer-normalizer/EntityFixture.php', 'src/Entity/EntityFixture.php');
 
                 $output = $runner->runMaker(
                     ['EntityFixture']
                 );
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 self::assertFileEquals(
                     \dirname(__DIR__).'/fixtures/make-serializer-normalizer/EntityFixtureNormalizer.php',

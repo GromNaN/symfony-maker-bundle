@@ -23,11 +23,11 @@ class MakeUserTest extends MakerTestCase
         return MakeUser::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_entity_with_password' => [$this->createMakerTest()
+        yield 'it_generates_entity_with_password' => [self::buildMakerTest()
             ->addExtraDependencies('doctrine')
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-user/standard_setup',
                     ''
@@ -41,14 +41,14 @@ class MakeUserTest extends MakerTestCase
                     'y', // with password
                 ]);
 
-                $this->runUserTest($runner, 'it_generates_entity_with_password.php');
+                self::runUserTest($runner, 'it_generates_entity_with_password.php');
             }),
         ];
 
-        yield 'it_generates_entity_with_password_and_uuid' => [$this->createMakerTest()
+        yield 'it_generates_entity_with_password_and_uuid' => [self::buildMakerTest()
             ->addExtraDependencies('doctrine')
             ->addExtraDependencies('symfony/uid')
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-user/standard_setup',
                     ''
@@ -62,14 +62,14 @@ class MakeUserTest extends MakerTestCase
                     'y', // with password
                 ], '--with-uuid');
 
-                $this->runUserTest($runner, 'it_generates_entity_with_password_and_uuid.php');
+                self::runUserTest($runner, 'it_generates_entity_with_password_and_uuid.php');
             }),
         ];
 
-        yield 'it_generates_entity_with_password_and_ulid' => [$this->createMakerTest()
+        yield 'it_generates_entity_with_password_and_ulid' => [self::buildMakerTest()
             ->addExtraDependencies('doctrine')
             ->addExtraDependencies('symfony/uid')
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-user/standard_setup',
                     ''
@@ -83,13 +83,13 @@ class MakeUserTest extends MakerTestCase
                     'y', // with password
                 ], '--with-ulid');
 
-                $this->runUserTest($runner, 'it_generates_entity_with_password_and_ulid.php');
+                self::runUserTest($runner, 'it_generates_entity_with_password_and_ulid.php');
             }),
         ];
 
-        yield 'it_generates_non_entity_no_password' => [$this->createMakerTest()
+        yield 'it_generates_non_entity_no_password' => [self::buildMakerTest()
             ->addExtraDependencies('doctrine')
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-user/standard_setup',
                     ''
@@ -116,12 +116,12 @@ class MakeUserTest extends MakerTestCase
                     'return (new FunUser())->setUsername($identifier);'
                 );
 
-                $this->runUserTest($runner, 'it_generates_non_entity_no_password.php');
+                self::runUserTest($runner, 'it_generates_non_entity_no_password.php');
             }),
         ];
     }
 
-    private function runUserTest(MakerTestRunner $runner, string $filename): void
+    private static function runUserTest(MakerTestRunner $runner, string $filename): void
     {
         $runner->copy(
             'make-user/tests/'.$filename,

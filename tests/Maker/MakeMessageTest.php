@@ -25,9 +25,9 @@ class MakeMessageTest extends MakerTestCase
         return MakeMessage::class;
     }
 
-    private function createMakeMessageTest(): MakerTestDetails
+    private static function createMakeMessageTest(): MakerTestDetails
     {
-        return $this->createMakerTest()
+        return self::buildMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->writeFile(
                     'config/services_test.yaml',
@@ -41,39 +41,39 @@ class MakeMessageTest extends MakerTestCase
             });
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_basic_message' => [$this->createMakeMessageTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_basic_message' => [self::createMakeMessageTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     'SendWelcomeEmail',
                 ]);
 
-                $this->runMessageTest($runner, 'it_generates_basic_message.php');
+                self::runMessageTest($runner, 'it_generates_basic_message.php');
             }),
         ];
 
-        yield 'it_generates_message_with_transport' => [$this->createMakeMessageTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->configureTransports($runner);
+        yield 'it_generates_message_with_transport' => [self::createMakeMessageTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::configureTransports($runner);
 
                 $output = $runner->runMaker([
                     'SendWelcomeEmail',
                     1,
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
-                $this->runMessageTest($runner, 'it_generates_message_with_transport.php');
+                self::runMessageTest($runner, 'it_generates_message_with_transport.php');
 
                 $messageContents = file_get_contents($runner->getPath('src/Message/SendWelcomeEmail.php'));
 
                 if (!str_contains($messageContents, AsMessage::class)) {
                     /* @legacy remove when AsMessage is always available */
                     $messengerConfig = $runner->readYaml('config/packages/messenger.yaml');
-                    $this->assertArrayHasKey('routing', $messengerConfig['framework']['messenger']);
-                    $this->assertArrayHasKey('App\Message\SendWelcomeEmail', $messengerConfig['framework']['messenger']['routing']);
-                    $this->assertSame(
+                    self::assertArrayHasKey('routing', $messengerConfig['framework']['messenger']);
+                    self::assertArrayHasKey('App\Message\SendWelcomeEmail', $messengerConfig['framework']['messenger']['routing']);
+                    self::assertSame(
                         'async',
                         $messengerConfig['framework']['messenger']['routing']['App\Message\SendWelcomeEmail']
                     );
@@ -81,34 +81,34 @@ class MakeMessageTest extends MakerTestCase
                     return;
                 }
 
-                $this->assertStringContainsString(AsMessage::class, $messageContents);
-                $this->assertStringContainsString("#[AsMessage('async')]", $messageContents);
+                self::assertStringContainsString(AsMessage::class, $messageContents);
+                self::assertStringContainsString("#[AsMessage('async')]", $messageContents);
             }),
         ];
 
-        yield 'it_generates_message_with_no_transport' => [$this->createMakeMessageTest()
-            ->run(function (MakerTestRunner $runner) {
-                $this->configureTransports($runner);
+        yield 'it_generates_message_with_no_transport' => [self::createMakeMessageTest()
+            ->run(static function (MakerTestRunner $runner) {
+                self::configureTransports($runner);
 
                 $output = $runner->runMaker([
                     'SendWelcomeEmail',
                     0,
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
-                $this->runMessageTest($runner, 'it_generates_message_with_transport.php');
+                self::runMessageTest($runner, 'it_generates_message_with_transport.php');
 
                 $messengerConfig = $runner->readYaml('config/packages/messenger.yaml');
-                $this->assertArrayNotHasKey('routing', $messengerConfig['framework']['messenger']);
+                self::assertArrayNotHasKey('routing', $messengerConfig['framework']['messenger']);
 
                 $messageContents = file_get_contents($runner->getPath('src/Message/SendWelcomeEmail.php'));
-                $this->assertStringNotContainsString(AsMessage::class, $messageContents);
+                self::assertStringNotContainsString(AsMessage::class, $messageContents);
             }),
         ];
     }
 
-    private function runMessageTest(MakerTestRunner $runner, string $filename): void
+    private static function runMessageTest(MakerTestRunner $runner, string $filename): void
     {
         $runner->copy(
             'make-message/tests/'.$filename,
@@ -118,7 +118,7 @@ class MakeMessageTest extends MakerTestCase
         $runner->runTests();
     }
 
-    private function configureTransports(MakerTestRunner $runner): void
+    private static function configureTransports(MakerTestRunner $runner): void
     {
         $runner->writeFile(
             'config/packages/messenger.yaml',

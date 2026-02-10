@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 
@@ -70,6 +71,7 @@ class DependencyBuilderTest extends TestCase
     /**
      * @dataProvider getMissingPackagesMessageTests
      */
+    #[DataProvider('getMissingPackagesMessageTests')]
     public function testGetMissingPackagesMessage(array $missingPackages, array $missingDevPackages, string $expectedMessage)
     {
         $depBuilder = new DependencyBuilder();
@@ -86,7 +88,7 @@ class DependencyBuilderTest extends TestCase
         $this->assertSame($expectedMessage, $depBuilder->getMissingPackagesMessage('make:something'));
     }
 
-    public function getMissingPackagesMessageTests()
+    public static function getMissingPackagesMessageTests()
     {
         yield 'nothing_missing' => [
             [],

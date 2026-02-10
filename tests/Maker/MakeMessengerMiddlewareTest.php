@@ -22,17 +22,17 @@ class MakeMessengerMiddlewareTest extends MakerTestCase
         return MakeMessengerMiddleware::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_messenger_middleware' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_messenger_middleware' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
                         // middleware name
                         'CustomMiddleware',
                     ]);
 
-                $this->assertFileExists($runner->getPath('src/Middleware/CustomMiddleware.php'));
+                self::assertFileExists($runner->getPath('src/Middleware/CustomMiddleware.php'));
             }),
         ];
     }

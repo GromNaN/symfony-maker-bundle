@@ -26,18 +26,18 @@ final class MakeDockerDatabaseTest extends MakerTestCase
         return MakeDockerDatabase::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_uses_3_7_compose_file_version_generates_mysql_database' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_uses_3_7_compose_file_version_generates_mysql_database' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker([
                     '0', // Select MySQL as the database
                     '', // use the default "latest" service version
                 ]);
 
-                $this->assertFileExists($runner->getPath('compose.yaml'));
+                self::assertFileExists($runner->getPath('compose.yaml'));
 
-                $manipulator = $this->getComposeManipulator($runner);
+                $manipulator = self::getComposeManipulator($runner);
                 $data = $manipulator->getComposeData();
 
                 self::assertSame('3.7', $data['version']);
@@ -53,16 +53,16 @@ final class MakeDockerDatabaseTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_creates_mariadb' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_creates_mariadb' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '1', // Select MariaDB as the database
                     '', // use the default "latest" service version
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
-                $manipulator = $this->getComposeManipulator($runner);
+                $manipulator = self::getComposeManipulator($runner);
 
                 self::assertTrue($manipulator->serviceExists('database'));
 
@@ -76,16 +76,16 @@ final class MakeDockerDatabaseTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_creates_postgresql' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_creates_postgresql' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '2', // Select Postgres as the database
                     '', // use the default "alpine" service version
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
-                $manipulator = $this->getComposeManipulator($runner);
+                $manipulator = self::getComposeManipulator($runner);
 
                 self::assertTrue($manipulator->serviceExists('database'));
 
@@ -101,7 +101,7 @@ final class MakeDockerDatabaseTest extends MakerTestCase
         ];
     }
 
-    private function getComposeManipulator(MakerTestRunner $runner): ComposeFileManipulator
+    private static function getComposeManipulator(MakerTestRunner $runner): ComposeFileManipulator
     {
         $composeFile = $runner->getPath('compose.yaml');
 

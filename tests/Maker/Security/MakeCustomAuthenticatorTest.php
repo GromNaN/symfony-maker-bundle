@@ -25,18 +25,18 @@ class MakeCustomAuthenticatorTest extends MakerTestCase
         return MakeCustomAuthenticator::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'generates_custom_authenticator' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'generates_custom_authenticator' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'FixtureAuthenticator', // Authenticator Name
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
                 $fixturePath = \dirname(__DIR__, 2).'/fixtures/security/make-custom-authenticator/expected';
 
-                $this->assertFileEquals($fixturePath.'/FixtureAuthenticator.php', $runner->getPath('src/Security/FixtureAuthenticator.php'));
+                self::assertFileEquals($fixturePath.'/FixtureAuthenticator.php', $runner->getPath('src/Security/FixtureAuthenticator.php'));
 
                 $securityConfig = $runner->readYaml('config/packages/security.yaml');
 

@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Docker;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\Docker\DockerDatabaseServices;
 use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
@@ -28,7 +29,7 @@ final class DatabaseServicesTest extends TestCase
         DockerDatabaseServices::getDatabaseSkeleton('foo', 'latest');
     }
 
-    public function mixedNameDataProvider(): \Generator
+    public static function mixedNameDataProvider(): \Generator
     {
         yield ['mariadb'];
         yield ['mysql'];
@@ -38,6 +39,7 @@ final class DatabaseServicesTest extends TestCase
     /**
      * @dataProvider mixedNameDataProvider
      */
+    #[DataProvider('mixedNameDataProvider')]
     public function testSkeletonReturnArrayForDesiredDatabase(string $databaseName)
     {
         $result = DockerDatabaseServices::getDatabaseSkeleton($databaseName, 'latest');
@@ -49,6 +51,7 @@ final class DatabaseServicesTest extends TestCase
     /**
      * @dataProvider mixedNameDataProvider
      */
+    #[DataProvider('mixedNameDataProvider')]
     public function testGetDefaultPorts(string $databaseName)
     {
         $result = DockerDatabaseServices::getDefaultPorts($databaseName);
@@ -59,6 +62,7 @@ final class DatabaseServicesTest extends TestCase
     /**
      * @dataProvider mixedNameDataProvider
      */
+    #[DataProvider('mixedNameDataProvider')]
     public function testSuggestedVersion(string $databaseName)
     {
         $result = DockerDatabaseServices::getSuggestedServiceVersion($databaseName);

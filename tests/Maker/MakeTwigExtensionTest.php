@@ -22,9 +22,9 @@ class MakeTwigExtensionTest extends MakerTestCase
         return MakeTwigExtension::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_twig_extension' => [$this->createMakerTest()
+        yield 'it_makes_twig_extension' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [

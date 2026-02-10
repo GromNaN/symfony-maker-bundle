@@ -23,9 +23,9 @@ class MakeTestTest extends MakerTestCase
         return MakeTest::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_makes_TestCase_type' => [$this->createMakerTest()
+        yield 'it_makes_TestCase_type' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->runMaker(
                     [
@@ -40,7 +40,7 @@ class MakeTestTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_KernelTestCase_type' => [$this->createMakerTest()
+        yield 'it_makes_KernelTestCase_type' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-test/basic_setup',
@@ -60,7 +60,7 @@ class MakeTestTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_WebTestCase_type' => [$this->createMakerTest()
+        yield 'it_makes_WebTestCase_type' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-test/basic_setup',
@@ -80,7 +80,7 @@ class MakeTestTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_makes_PantherTestCase_type' => [$this->getPantherTest()
+        yield 'it_makes_PantherTestCase_type' => [self::getPantherTest()
             ->addExtraDependencies('panther')
             ->run(static function (MakerTestRunner $runner) {
                 $runner->copy(
@@ -105,9 +105,9 @@ class MakeTestTest extends MakerTestCase
         ];
     }
 
-    protected function getPantherTest(): MakerTestDetails
+    protected static function getPantherTest(): MakerTestDetails
     {
-        return $this->createMakerTest()
+        return self::buildMakerTest()
             ->skipTest(
                 message: 'Panther test skipped - MAKER_SKIP_PANTHER_TEST set to TRUE.',
                 skipped: getenv('MAKER_SKIP_PANTHER_TEST')

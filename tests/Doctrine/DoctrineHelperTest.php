@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\MakerBundle\Tests\Doctrine;
 
 use Doctrine\DBAL\Types\Types;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\MakerBundle\Doctrine\DoctrineHelper;
 
@@ -20,12 +21,13 @@ class DoctrineHelperTest extends TestCase
     /**
      * @dataProvider getTypeConstantTests
      */
+    #[DataProvider('getTypeConstantTests')]
     public function testGetTypeConstant(string $columnType, ?string $expectedConstant)
     {
         $this->assertSame($expectedConstant, DoctrineHelper::getTypeConstant($columnType));
     }
 
-    public function getTypeConstantTests(): \Generator
+    public static function getTypeConstantTests(): \Generator
     {
         yield 'unknown_type' => ['foo', null];
         yield 'string' => ['string', 'Types::STRING'];
@@ -35,12 +37,13 @@ class DoctrineHelperTest extends TestCase
     /**
      * @dataProvider getCanColumnTypeBeInferredTests
      */
+    #[DataProvider('getCanColumnTypeBeInferredTests')]
     public function testCanColumnTypeBeInferredByPropertyType(string $columnType, string $propertyType, bool $expected)
     {
         $this->assertSame($expected, DoctrineHelper::canColumnTypeBeInferredByPropertyType($columnType, $propertyType));
     }
 
-    public function getCanColumnTypeBeInferredTests(): \Generator
+    public static function getCanColumnTypeBeInferredTests(): \Generator
     {
         yield 'non_matching' => [Types::TEXT, 'string', false];
         yield 'yes_matching' => [Types::STRING, 'string', true];

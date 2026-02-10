@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\MakerBundle\Maker\MakeSchedule;
 use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
@@ -18,6 +19,7 @@ use Symfony\Bundle\MakerBundle\Test\MakerTestRunner;
 /**
  * @group legacy
  */
+#[Group('legacy')]
 class MakeScheduleTest extends MakerTestCase
 {
     protected function getMakerClass(): string
@@ -25,16 +27,16 @@ class MakeScheduleTest extends MakerTestCase
         return MakeSchedule::class;
     }
 
-    public function getTestDetails(): \Generator
+    public static function getTestDetails(): \Generator
     {
-        yield 'it_generates_a_schedule_with_transport_name' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_a_schedule_with_transport_name' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     'dummy', // use transport name "dummy"
                     '', // use default schedule name "MainSchedule"
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 self::assertFileEquals(
                     \dirname(__DIR__).'/fixtures/make-schedule/expected/DefaultScheduleWithTransportName.php',
@@ -43,14 +45,14 @@ class MakeScheduleTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule' => [$this->createMakerTest()
-            ->run(function (MakerTestRunner $runner) {
+        yield 'it_generates_a_schedule' => [self::buildMakerTest()
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '', // use default transport name
                     '', // use default schedule name "MainSchedule"
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 self::assertFileEquals(
                     \dirname(__DIR__).'/fixtures/make-schedule/expected/DefaultScheduleEmpty.php',
@@ -59,21 +61,21 @@ class MakeScheduleTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule_select_empty' => [$this->createMakerTest()
+        yield 'it_generates_a_schedule_select_empty' => [self::buildMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-schedule/standard_setup',
                     ''
                 );
             })
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '', // Use the default transport name
                     0,  // Select "Empty Schedule"
                     'MySchedule', // Go with the default name "MainSchedule"
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 self::assertFileEquals(
                     \dirname(__DIR__).'/fixtures/make-schedule/expected/MyScheduleEmpty.php',
@@ -82,21 +84,21 @@ class MakeScheduleTest extends MakerTestCase
             }),
         ];
 
-        yield 'it_generates_a_schedule_select_existing_message' => [$this->createMakerTest()
+        yield 'it_generates_a_schedule_select_existing_message' => [self::buildMakerTest()
             ->preRun(static function (MakerTestRunner $runner) {
                 $runner->copy(
                     'make-schedule/standard_setup',
                     ''
                 );
             })
-            ->run(function (MakerTestRunner $runner) {
+            ->run(static function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
                     '', // Use the default transport name
                     1,  // Select "MyMessage" from choice
                     '', // Go with the default name "MessageFixtureSchedule"
                 ]);
 
-                $this->assertStringContainsString('Success', $output);
+                self::assertStringContainsString('Success', $output);
 
                 self::assertFileEquals(
                     \dirname(__DIR__).'/fixtures/make-schedule/expected/MyScheduleWithMessage.php',
