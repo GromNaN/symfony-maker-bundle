@@ -101,7 +101,7 @@ abstract class MakerTestCase extends TestCase
     /**
      * @return void
      *
-     * @deprecated since 1.66.0
+     * @deprecated since symfony/maker-bundle 1.66.0
      */
     protected function assertContainsCount(string $needle, string $haystack, int $count)
     {
