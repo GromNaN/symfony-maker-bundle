@@ -870,4 +870,33 @@ class ClassSourceManipulatorTest extends TestCase
             CODE
         );
     }
+
+    /**
+     * @requires PHP >= 8.4
+     */
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 8.4')]
+    public function testParsingPhp84PropertyHooks(): void
+    {
+        $source = file_get_contents(__DIR__.'/fixtures/source/User_property_hooks.php');
+
+        // This should not throw a PhpParser\Error
+        $manipulator = new ClassSourceManipulator($source);
+
+        // Verify we can still work with the class
+        $this->assertStringContainsString('class User', $manipulator->getSourceCode());
+    }
+
+    /**
+     * @requires PHP >= 8.4
+     */
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 8.4')]
+    public function testAddPropertyToClassWithPropertyHooks(): void
+    {
+        $source = file_get_contents(__DIR__.'/fixtures/source/User_property_hooks.php');
+
+        $manipulator = new ClassSourceManipulator($source);
+        $manipulator->addProperty(name: 'newProp', propertyType: '?string');
+
+        $this->assertStringContainsString('private ?string $newProp', $manipulator->getSourceCode());
+    }
 }
