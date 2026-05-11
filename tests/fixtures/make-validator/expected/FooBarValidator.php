@@ -7,10 +7,11 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 final class FooBarValidator extends ConstraintValidator
 {
+    /**
+     * @param FooBar $constraint
+     */
     public function validate(mixed $value, Constraint $constraint): void
     {
-        /* @var FooBar $constraint */
-
         if (null === $value || '' === $value) {
             return;
         }
