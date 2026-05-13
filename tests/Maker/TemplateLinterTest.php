@@ -47,7 +47,7 @@ final class TemplateLinterTest extends MakerTestCase
                 );
 
                 // Voter class name
-                $output = $runner->runMaker(['FooBar']);
+                $output = $runner->runMaker(['FooBar'], '-v');
 
                 $generatedTemplate = file_get_contents($runner->getPath('src/Security/Voter/FooBarVoter.php'));
 
@@ -73,7 +73,7 @@ final class TemplateLinterTest extends MakerTestCase
                 );
 
                 // Voter class name
-                $output = $runner->runMaker(['FooBar']);
+                $output = $runner->runMaker(['FooBar'], '-v');
 
                 $generatedTemplate = file_get_contents($runner->getPath('src/Security/Voter/FooBarVoter.php'));
 
@@ -87,7 +87,7 @@ final class TemplateLinterTest extends MakerTestCase
         yield 'lints_templates_with_bundled_php_cs_fixer' => [self::buildMakerTest()
             ->run(static function (MakerTestRunner $runner) {
                 // Voter class name
-                $output = $runner->runMaker(['FooBar']);
+                $output = $runner->runMaker(['FooBar'], '-v');
 
                 $expectedOutput = 'Bundled PHP-CS-Fixer & Bundled PHP-CS-Fixer Configuration';
                 self::assertStringContainsString($expectedOutput, $output);
