@@ -305,12 +305,8 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
                 throw new \Exception('Invalid value.');
             }
 
-            foreach ($fileManagerOperations as $path => $manipulatorOrMessage) {
-                if (\is_string($manipulatorOrMessage)) {     /* @phpstan-ignore-line - https://github.com/symfony/maker-bundle/issues/1509 */
-                    $io->comment($manipulatorOrMessage);
-                } else {
-                    $this->fileManager->dumpFile($path, $manipulatorOrMessage->getSourceCode());
-                }
+            foreach ($fileManagerOperations as $path => $manipulator) {
+                $this->fileManager->dumpFile($path, $manipulator->getSourceCode());
             }
         }
 
