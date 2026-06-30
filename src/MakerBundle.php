@@ -63,6 +63,8 @@ class MakerBundle extends AbstractBundle
                 ->arg(0, $config['generate_final_classes'])
                 ->arg(1, $config['generate_final_entities'])
                 ->arg(2, $rootNamespace)
+            ->get('maker.entity_class_generator')
+                ->arg(2, $config['generate_final_entities'])
         ;
 
         $builder

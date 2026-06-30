@@ -89,6 +89,7 @@ return static function (ContainerConfigurator $container) {
         ->args([
             service('maker.generator'),
             service('maker.doctrine_helper'),
+            false, // overridden by the "generate_final_entities" config in MakerBundle::loadExtension()
         ]);
 
     $services->set('maker.user_class_builder', UserClassBuilder::class);

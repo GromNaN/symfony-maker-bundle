@@ -68,6 +68,27 @@ class MakeEntityTest extends MakerTestCase
             }),
         ];
 
+        yield 'it_creates_a_final_class_when_configured' => [self::createMakeEntityTest(withDatabase: false)
+            ->run(static function (MakerTestRunner $runner) {
+                $runner->writeFile(
+                    'config/packages/dev/maker.yaml',
+                    Yaml::dump(['maker' => ['generate_final_entities' => true]])
+                );
+
+                $runner->runMaker([
+                    // entity class name
+                    'User',
+                    // add no additional fields
+                    '',
+                ]);
+
+                self::assertStringContainsString(
+                    'final class User',
+                    file_get_contents($runner->getPath('src/Entity/User.php'))
+                );
+            }),
+        ];
+
         yield 'it_only_shows_supported_types' => [self::createMakeEntityTest()
             ->run(function (MakerTestRunner $runner) {
                 $output = $runner->runMaker([
