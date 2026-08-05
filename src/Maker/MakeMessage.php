@@ -102,8 +102,7 @@ final class MakeMessage extends AbstractMaker
 
         $useStatements = new UseStatementGenerator([]);
 
-        /* @legacy remove when AsMessage is always available */
-        if ($chosenTransport && class_exists(AsMessage::class)) {
+        if ($chosenTransport) {
             $useStatements->addUseStatement(AsMessage::class);
         }
 
@@ -112,7 +111,7 @@ final class MakeMessage extends AbstractMaker
             'message/Message.tpl.php',
             [
                 'use_statements' => $useStatements,
-                'transport' => class_exists(AsMessage::class) ? $chosenTransport : null,
+                'transport' => $chosenTransport,
             ]
         );
 
@@ -130,11 +129,6 @@ final class MakeMessage extends AbstractMaker
             ]
         );
 
-        /* @legacy remove when AsMessage is always available */
-        if ($chosenTransport && !class_exists(AsMessage::class)) {
-            $this->updateMessengerConfig($generator, $chosenTransport, $messageClassNameDetails->getFullName());
-        }
-
         $generator->writeChanges();
 
         $this->writeSuccessMessage($io);
@@ -144,21 +138,6 @@ final class MakeMessage extends AbstractMaker
             '      Then, open the new message handler and do whatever work you want!',
             'Find the documentation at <fg=yellow>https://symfony.com/doc/current/messenger.html</>',
         ]);
-    }
-
-    private function updateMessengerConfig(Generator $generator, string $chosenTransport, string $messageClass): void
-    {
-        $manipulator = new YamlSourceManipulator($this->fileManager->getFileContents($configFilePath = 'config/packages/messenger.yaml'));
-        $messengerData = $manipulator->getData();
-
-        if (!isset($messengerData['framework']['messenger']['routing'])) {
-            $messengerData['framework']['messenger']['routing'] = [];
-        }
-
-        $messengerData['framework']['messenger']['routing'][$messageClass] = $chosenTransport;
-
-        $manipulator->setData($messengerData);
-        $generator->dumpFile($configFilePath, $manipulator->getContents());
     }
 
     public function configureDependencies(DependencyBuilder $dependencies): void

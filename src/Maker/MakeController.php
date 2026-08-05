@@ -43,7 +43,7 @@ final class MakeController extends AbstractMaker
     private bool $usesTwigTemplate;
     private string $twigTemplatePath;
 
-    public function __construct(private ?PhpCompatUtil $phpCompatUtil = null)
+    public function __construct(?PhpCompatUtil $phpCompatUtil = null)
     {
         if (null !== $phpCompatUtil) {
             @trigger_deprecation(
