@@ -34,7 +34,7 @@ class FixtureAuthenticator extends AbstractAuthenticator
         // if (null === $apiToken) {
         // The token header was empty, authentication fails with HTTP Status
         // Code 401 "Unauthorized"
-        // throw new CustomUserMessageAuthenticationException('No API token provided');
+        // throw new CustomUserMessageAuthenticationException('No API token provided.');
         // }
 
         // implement your own logic to get the user identifier from `$apiToken`

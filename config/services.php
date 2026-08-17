@@ -27,7 +27,6 @@ use Symfony\Bundle\MakerBundle\Util\ComposerAutoloaderFinder;
 use Symfony\Bundle\MakerBundle\Util\MakerFileLinkFormatter;
 use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Util\TemplateComponentGenerator;
-use Symfony\Bundle\MakerBundle\Util\TemplateLinter;
 
 return static function (ContainerConfigurator $container) {
     $services = $container->services();
@@ -62,19 +61,12 @@ return static function (ContainerConfigurator $container) {
             service('doctrine')->ignoreOnInvalid(),
         ]);
 
-    $services->set('maker.template_linter', TemplateLinter::class)
-        ->args([
-            '%env(default::string:MAKER_PHP_CS_FIXER_BINARY_PATH)%',
-            '%env(default::string:MAKER_PHP_CS_FIXER_CONFIG_PATH)%',
-        ]);
-
     $services->set('maker.auto_command.abstract', MakerCommand::class)
         ->abstract()
         ->args([
             '',
             service('maker.file_manager'),
             service('maker.generator'),
-            service('maker.template_linter'),
         ]);
 
     $services->set('maker.generator', Generator::class)
