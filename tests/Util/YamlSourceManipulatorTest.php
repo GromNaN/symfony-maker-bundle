@@ -11,14 +11,11 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Util;
 
-use Composer\InstalledVersions;
-use Composer\Semver\VersionParser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\MakerBundle\Util\YamlSourceManipulator;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\Yaml\Yaml;
 
@@ -30,7 +27,7 @@ class YamlSourceManipulatorTest extends TestCase
      */
     #[DataProvider('getYamlDataTestsUnixSlashes')]
     #[DataProvider('getYamlDataTestsWindowsSlashes')]
-    public function testSetData(string $startingSource, array $newData, string $expectedSource)
+    public function testSetData(string $startingSource, array $newData, string $expectedSource): void
     {
         $manipulator = new YamlSourceManipulator($startingSource);
 
@@ -51,11 +48,7 @@ class YamlSourceManipulatorTest extends TestCase
          */
         $actualContents = $manipulator->getContents();
         $actualContents = str_replace("\r\n", "\n", $actualContents);
-        if (InstalledVersions::satisfies(new VersionParser(), 'symfony/yaml', '<8.1')) {
-            $this->assertSame(preg_replace('/\s+/', '', $expectedSource), preg_replace('/\s+/', '', $actualContents));
-        } else {
-            $this->assertSame($expectedSource, $actualContents);
-        }
+        $this->assertSame($expectedSource, $actualContents);
     }
 
     private static function getYamlDataTests(): \Generator
