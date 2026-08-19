@@ -18,12 +18,11 @@ use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\MakerInterface;
-use Symfony\Bundle\MakerBundle\Util\TemplateLinter;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class MakerCommandTest extends TestCase
 {
-    public function testExceptionOnMissingDependencies()
+    public function testExceptionOnMissingDependencies(): void
     {
         $this->expectException(RuntimeCommandException::class);
         // @phpstan-ignore function.alreadyNarrowedType
@@ -41,20 +40,20 @@ class MakerCommandTest extends TestCase
 
         $fileManager = $this->createMock(FileManager::class);
 
-        $command = new MakerCommand($maker, $fileManager, new Generator($fileManager, 'App'), new TemplateLinter());
+        $command = new MakerCommand($maker, $fileManager, new Generator($fileManager, 'App'));
         // needed because it's normally set by the Application
         $command->setName('make:foo');
         $tester = new CommandTester($command);
         $tester->execute([]);
     }
 
-    public function testExceptionOnUnknownRootNamespace()
+    public function testExceptionOnUnknownRootNamespace(): void
     {
         $maker = $this->createMock(MakerInterface::class);
 
         $fileManager = $this->createMock(FileManager::class);
 
-        $command = new MakerCommand($maker, $fileManager, new Generator($fileManager, 'Unknown'), new TemplateLinter());
+        $command = new MakerCommand($maker, $fileManager, new Generator($fileManager, 'Unknown'));
         // needed because it's normally set by the Application
         $command->setName('make:foo');
         $tester = new CommandTester($command);
