@@ -339,7 +339,7 @@ final class MakerTestEnvironment
 
         // We don't need ansi coloring in tests!
         $process = MakerTestProcess::create(
-            commandLine: \sprintf('php bin/console %s %s --no-ansi', $commandName, $argumentsString),
+            commandLine: \sprintf('php bin/console %s %s --no-ansi --no-debug', $commandName, $argumentsString),
             cwd: $this->path,
             envVars: $envVars,
             timeout: 30
