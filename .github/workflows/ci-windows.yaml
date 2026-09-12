@@ -37,6 +37,15 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
+            - name: Disable Windows Defender realtime scanning
+              # The suite spawns hundreds of short-lived PHP subprocesses that each read and
+              # write many small files. Defender realtime scanning is the single biggest Windows
+              # slowdown here; the runner is ephemeral, so disabling it is safe and saves a
+              # large chunk of the "Run Tests" time.
+              continue-on-error: true
+              shell: pwsh
+              run: Set-MpPreference -DisableRealtimeMonitoring $true
+
             - name: Setup SQLite For Entity Regen Tests
               run: |
                   choco install sqlite --params "/NoTools"
