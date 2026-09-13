@@ -47,7 +47,11 @@ final class MakerTestEnvironment
         $composerPackage = InstalledVersions::getRootPackage();
         $this->packageName = $composerPackage['name'];
         $this->rootPath = realpath($composerPackage['install_path']);
-        $cachePath = $this->rootPath.'/tests/tmp/cache';
+        // The cache dir holds the flex skeleton and one cloned project per test. Pointing it
+        // at a faster filesystem (e.g. /dev/shm tmpfs on Linux CI) speeds up the git clone,
+        // vendor checkout and container writes that dominate cold setup. Defaults to the
+        // in-repo location for backward compatibility.
+        $cachePath = getenv('MAKER_CACHE_DIR') ?: $this->rootPath.'/tests/tmp/cache';
 
         if (!$this->fs->exists($cachePath)) {
             $this->fs->mkdir($cachePath);
