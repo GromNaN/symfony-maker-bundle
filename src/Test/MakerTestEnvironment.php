@@ -215,7 +215,11 @@ final class MakerTestEnvironment
         $testProcess = $this->createInteractiveCommandProcess(
             commandName: $this->testDetails->getMaker()::getCommandName(),
             userInputs: $inputs,
-            argumentsString: $argumentsString,
+            // --no-debug boots the dev kernel without the debug container (event dispatcher
+            // proxy, stopwatches, deprecation handlers), which is cheaper. It only targets
+            // the maker command (dev env); runConsole/runTests keep the test env + debug so
+            // they share one cached container instead of rebuilding it.
+            argumentsString: trim(\sprintf('%s --no-debug', $argumentsString)),
             envVars: $envVars,
         );
 
@@ -339,7 +343,7 @@ final class MakerTestEnvironment
 
         // We don't need ansi coloring in tests!
         $process = MakerTestProcess::create(
-            commandLine: \sprintf('php bin/console %s %s --no-ansi --no-debug', $commandName, $argumentsString),
+            commandLine: \sprintf('php bin/console %s %s --no-ansi', $commandName, $argumentsString),
             cwd: $this->path,
             envVars: $envVars,
             timeout: 30
