@@ -1,0 +1,102 @@
+name: "CI Linux (sharded)"
+
+on:
+    push:
+        branches:
+            - 'perf/parallel-sharding'
+    # Also run on the PR so the sharded cells and the baseline cell for the same
+    # PHP/Symfony/deps combo are measured on the same PR (same runner pool, same time).
+    pull_request:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+env:
+    PHPUNIT_FLAGS: "-v"
+    SYMFONY_PHPUNIT_DIR: "$HOME/symfony-bridge/.phpunit"
+    # Put the flex skeleton + per-test projects on a tmpfs (in-memory) filesystem so the
+    # git clone, vendor checkout and container writes run at RAM speed instead of disk.
+    # /dev/shm is a per-runner tmpfs on Ubuntu runners; each matrix cell is a
+    # separate runner so there is no cross-cell contention.
+    MAKER_CACHE_DIR: "/dev/shm/maker-cache"
+
+jobs:
+    shard:
+        name: "Shard ${{ matrix.shard }}: PHP 8.4 + @^8 highest"
+
+        runs-on: ubuntu-latest
+
+        # The MakeEntityTest suite includes Mercure broadcast cases that need a
+        # running Mercure hub, exactly like the parent ci-linux.yaml.
+        services:
+            mercure:
+                image: dunglas/mercure
+                env:
+                    SERVER_NAME: :1337
+                    MERCURE_PUBLISHER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
+                    MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
+                    MERCURE_EXTRA_DIRECTIVES: |
+                        anonymous
+                        cors_origins *
+                ports:
+                    - 1337:1337
+
+        env:
+            SYMFONY_VERSION: "^8"
+
+        strategy:
+            fail-fast: false
+            matrix:
+                shard: [1, 2, 3, 4]
+                include:
+                    - shard: 1
+                      filter: "MakeEntityTest|MakeFormTest"
+                    - shard: 2
+                      filter: "MakeWebhookTest|MakeScheduleTest|MakeResetPasswordTest|MakeUserTest|MakeListenerTest"
+                    - shard: 3
+                      filter: "MakeRegistrationFormTest|MakeCrudTest|MakeAuthenticatorTest|MakeMigrationTest"
+                    - shard: 4
+                      filter: "MakeTwigComponentTest|MakeTestTest|MakeStimulusControllerTest|MakeControllerTest|MakeCustomAuthenticatorTest|MakeFormLoginTest|MakeFixturesTest|MakeUnitTestTest|MakeValidatorTest|MakeSubscriberTest|MakeVoterTest|MakeDecoratorTest|MakeMessageTest|MakeSerializerEncoderTest|MakeSerializerNormalizerTest|MakeTwigExtensionTest|MakeDockerDatabaseTest|MakeFunctionalTestTest|MakeMessengerMiddlewareTest"
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Install PHP with extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  coverage: none
+                  php-version: '8.4'
+                  tools: flex
+                  ini-values: opcache.enable_cli=1, opcache.memory_consumption=256, opcache.max_accelerated_files=20000, opcache.interned_strings_buffer=16
+
+            - name: Composer install
+              uses: "ramsey/composer-install@v3"
+              with:
+                  dependency-versions: "highest"
+
+            - name: Composer install php-cs-fixer
+              uses: "ramsey/composer-install@v3"
+              with:
+                  composer-options: "--no-scripts --working-dir=tools/php-cs-fixer"
+
+            - name: Composer install twigcs
+              uses: "ramsey/composer-install@v3"
+              with:
+                  composer-options: "--no-scripts --working-dir=tools/twigcs"
+
+            - name: Install PHPUnit
+              run: |
+                  vendor/bin/simple-phpunit install
+              env:
+                  PHPUNIT_VERSION: '9.6'
+
+            - name: Run tests (shard ${{ matrix.shard }})
+              run: vendor/bin/simple-phpunit --testsuite makers --filter "${{ matrix.filter }}" ${{ env.PHPUNIT_FLAGS }}
+              env:
+                  # Balanced 4-way split of the `makers` suite by measured per-class time
+                  # (see .ignored/perf/ANALYSIS.md). Each shard runs a subset of maker
+                  # test classes via a --filter regex (PHPUnit --filter matches test
+                  # names containing the class name). The flex skeleton is rebuilt once per shard.
+                  filter: ${{ matrix.filter }}
