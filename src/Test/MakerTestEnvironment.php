@@ -183,7 +183,14 @@ final class MakerTestEnvironment
 
                 $this->changeRootNamespaceIfNeeded();
 
-                file_put_contents($this->path.'/.gitignore', "var/cache/\nvendor/\n");
+                // Only rewrite .gitignore when the cloned skeleton does not already ignore
+                // vendor/. New skeletons (built above) already do, so this is a no-op for them
+                // and the "git diff --quiet" below stays true for simple tests, skipping the
+                // redundant "second commit". Older cached skeletons get the old behavior.
+                $currentGitignore = @file_get_contents($this->path.'/.gitignore');
+                if (!\is_string($currentGitignore) || !str_contains($currentGitignore, 'vendor/')) {
+                    file_put_contents($this->path.'/.gitignore', "var/cache/\nvendor/\n");
+                }
 
                 MakerTestProcess::create(\sprintf('git diff --quiet || ( %s && git add . && git commit -a -m "second commit" )', self::GIT_CONFIG),
                     $this->path
@@ -294,7 +301,9 @@ final class MakerTestEnvironment
         $this->processReplacements($replacements, $this->flexPath);
         // end of temp code
 
-        file_put_contents($this->flexPath.'/.gitignore', "var/cache/\n");
+        // Ignore vendor/ in the skeleton too, so cloned apps inherit it and do not need to
+        // rewrite .gitignore (and trigger a "second commit") on every cold start.
+        file_put_contents($this->flexPath.'/.gitignore', "var/cache/\nvendor/\n");
 
         // Force adding vendor/ dir to Git repo in case users exclude it in global .gitignore
         MakerTestProcess::create(\sprintf('git init && %s && git add . && git add vendor/ -f && git commit -a -m "first commit"', self::GIT_CONFIG),
