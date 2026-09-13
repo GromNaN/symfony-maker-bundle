@@ -15,6 +15,11 @@ concurrency:
 env:
     PHPUNIT_FLAGS: "-v"
     SYMFONY_PHPUNIT_DIR: "$HOME/symfony-bridge/.phpunit"
+    # Put the flex skeleton + per-test projects on a tmpfs (in-memory) filesystem so the
+    # git clone, vendor checkout and container writes run at RAM speed instead of disk.
+    # /dev/shm is a per-runner tmpfs on Ubuntu runners; each matrix cell is a separate
+    # runner so there is no cross-cell contention. Linux only.
+    MAKER_CACHE_DIR: "/dev/shm/maker-cache"
 
 jobs:
     test:
